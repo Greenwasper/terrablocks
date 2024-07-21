@@ -1,0 +1,101 @@
+<div id="title-bar" class="fixed z-40 right-0 w-full lg:w-[calc(100%-270px)] bg-secondary text-gray-100 h-14 flex items-center justify-between lg:justify-between transition-all duration-[0.4s] shadow-md ">
+    <div class="flex">
+        <svg id="burger" class="w-7 ml-4 stroke-gray-200 cursor-pointer inline-block lg:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <p class="ml-4 truncate"><%= title %></p>
+    </div>
+    <div class="flex mr-4">
+        <div id="profile-dropdown-btn" class="relative flex items-center h-14 cursor-pointer">
+            <img class="w-8 h-8 object-cover rounded-full" src="assets/profile-img/<%= `${user.eth_address}.jpg` %>" onerror="this.onerror=null; this.src='assets/upload-default.jpg';" alt="profile-img">
+            <p class="ml-2 hidden md:block"><%= user.role == 'admin' ? `${user.name}` : `${user.first_name.charAt(0)}. ${user.last_name}`  %></p>
+            <svg class="ml-2 w-4 relative top-[1px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+
+            <div id="profile-dropdown" class="absolute text-center bg-white w-[240px] top-16 right-2 cursor-default rounded-xl shadow-lg transition-all duration-300 hide-profile-dropdown">
+                <div class="py-4">
+                    <h1 class="text-lg text-gray-700"><%= user.role == 'admin' ? `${user.name}` : `${user.first_name} ${user.last_name}` %></h1>
+                    <p class="text-gray-500"><%= `${user.role.charAt(0).toUpperCase()}${user.role.substring(1, user.role.length)}` %></p>
+                    <h2 class="mt-1 text-sm text-gray-500"><%= user.role == 'superuser' ? `Affiliation: ${user.party.toUpperCase()}` : '' %></h2>
+                </div>
+                <div class="text-black">
+                    <a href="/profile" class="profile-dropdown-tile">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <p>Profile</p>
+                    </a>
+
+                    <a href="" class="profile-dropdown-tile">
+                        <ion-icon name="settings-outline"></ion-icon>
+                        <p>Settings</p>
+                    </a>
+
+                    <a href="/logout" class="profile-dropdown-tile rounded-b-xl">
+                        <ion-icon class="!text-red-400" name="log-out-outline"></ion-icon>
+                        <p class="text-red-400">Log out</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="drawer-overlay" class="fixed z-[9999999999999] top-0 right-0 h-full w-full bg-transparent pointer-events-none transition-all duration-[0.4s]"></div>
+
+<nav id="drawer" class="bg-primary text-gray-100 fixed z-[100] top-0 left-[-270px] lg:left-0 w-[270px] h-full overflow-auto text-center flex flex-col items-center transition-all duration-[0.4s] shadow-xl">
+    <div class="bg-secondary w-full px-6 py-7 flex flex-col items-center gap-3">
+        <img class="w-24 h-24 object-cover rounded-full" src="assets/hero.jpg" alt="profile_img">
+        <div class="flex flex-col">
+            <h1 class="text-2xl">TerraBlock</h1>
+        </div>
+    </div>
+    
+    <div class="mt-3 px-6 flex flex-col justify-between w-full h-full">
+        <div>
+            <a href="/" class='drawer-tile'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4C6.486 4 2 8.486 2 14a9.89 9.89 0 0 0 1.051 4.445c.17.34.516.555.895.555h16.107c.379 0 .726-.215.896-.555A9.89 9.89 0 0 0 22 14c0-5.514-4.486-10-10-10zm7.41 13H4.59A7.875 7.875 0 0 1 4 14c0-4.411 3.589-8 8-8s8 3.589 8 8a7.875 7.875 0 0 1-.59 3z"></path><path d="M10.939 12.939a1.53 1.53 0 0 0 0 2.561 1.53 1.53 0 0 0 2.121-.44l3.962-6.038a.034.034 0 0 0 0-.035.033.033 0 0 0-.045-.01l-6.038 3.962z"></path></svg>
+                <span class="">Dashboard</span>
+            </a>
+            <a href="/land-map" class='drawer-tile'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.447 6.105-6-3a1 1 0 0 0-.895 0L9 5.882 3.447 3.105A1 1 0 0 0 2 4v13c0 .379.214.725.553.895l6 3a1 1 0 0 0 .895 0L15 18.118l5.553 2.776a.992.992 0 0 0 .972-.043c.295-.183.475-.504.475-.851V7c0-.379-.214-.725-.553-.895zM10 7.618l4-2v10.764l-4 2V7.618zm-6-2 4 2v10.764l-4-2V5.618zm16 12.764-4-2V5.618l4 2v10.764z"></path></sv>
+                <span class="">Lands Map</span>
+            </a>
+
+            <% if(user.role == 'admin' || user.role == 'superuser'){ %>
+
+            <a href="/register-land" class='drawer-tile'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 17 1-2V9.858c1.721-.447 3-2 3-3.858 0-2.206-1.794-4-4-4S8 3.794 8 6c0 1.858 1.279 3.411 3 3.858V15l1 2zM10 6c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2-2-.897-2-2z"></path><path d="m16.267 10.563-.533 1.928C18.325 13.207 20 14.584 20 16c0 1.892-3.285 4-8 4s-8-2.108-8-4c0-1.416 1.675-2.793 4.267-3.51l-.533-1.928C4.197 11.54 2 13.623 2 16c0 3.364 4.393 6 10 6s10-2.636 10-6c0-2.377-2.197-4.46-5.733-5.437z"></path></svg>
+                <span class="">Register Land</span>
+            </a>
+
+            <% } %>
+
+            <% if(user.role == 'admin'){ %>
+
+            <a href="/superusers" class='drawer-tile'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.604 11.048a5.67 5.67 0 0 0 .751-3.44c-.179-1.784-1.175-3.361-2.803-4.44l-1.105 1.666c1.119.742 1.8 1.799 1.918 2.974a3.693 3.693 0 0 1-1.072 2.986l-1.192 1.192 1.618.475C18.951 13.701 19 17.957 19 18h2c0-1.789-.956-5.285-4.396-6.952z"></path><path d="M9.5 12c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm0-6c1.103 0 2 .897 2 2s-.897 2-2 2-2-.897-2-2 .897-2 2-2zm1.5 7H8c-3.309 0-6 2.691-6 6v1h2v-1c0-2.206 1.794-4 4-4h3c2.206 0 4 1.794 4 4v1h2v-1c0-3.309-2.691-6-6-6z"></path></svg>
+                <span class="">Manage Superusers</span>
+            </a>
+
+            <% } %>
+
+            <a href="/transactions" class='drawer-tile'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15 12 5-4-5-4v2.999H2v2h13zm7 3H9v-3l-5 4 5 4v-3h13z"></path></sv>
+                <span class=""><%= user.role == 'user' ? 'Active Transactions' : 'Pending Verifications' %></span>
+            </a>
+
+            <a href="/ack-history" class='drawer-tile'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v17a1 1 0 0 0 1 1h17v-2H5V3H3z"></path><path d="M15.293 14.707a.999.999 0 0 0 1.414 0l5-5-1.414-1.414L16 12.586l-2.293-2.293a.999.999 0 0 0-1.414 0l-5 5 1.414 1.414L13 12.414l2.293 2.293z"></path></svg>
+                <span class="">Actions</span>
+            </a>
+
+            <a href="/transfers" class='drawer-tile'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8v5h5v-2h-3V8z"></path><path d="M21.292 8.497a8.957 8.957 0 0 0-1.928-2.862 9.004 9.004 0 0 0-4.55-2.452 9.09 9.09 0 0 0-3.626 0 8.965 8.965 0 0 0-4.552 2.453 9.048 9.048 0 0 0-1.928 2.86A8.963 8.963 0 0 0 4 12l.001.025H2L5 16l3-3.975H6.001L6 12a6.957 6.957 0 0 1 1.195-3.913 7.066 7.066 0 0 1 1.891-1.892 7.034 7.034 0 0 1 2.503-1.054 7.003 7.003 0 0 1 8.269 5.445 7.117 7.117 0 0 1 0 2.824 6.936 6.936 0 0 1-1.054 2.503c-.25.371-.537.72-.854 1.036a7.058 7.058 0 0 1-2.225 1.501 6.98 6.98 0 0 1-1.313.408 7.117 7.117 0 0 1-2.823 0 6.957 6.957 0 0 1-2.501-1.053 7.066 7.066 0 0 1-1.037-.855l-1.414 1.414A8.985 8.985 0 0 0 13 21a9.05 9.05 0 0 0 3.503-.707 9.009 9.009 0 0 0 3.959-3.26A8.968 8.968 0 0 0 22 12a8.928 8.928 0 0 0-.708-3.503z"></path></svg>
+                <span class=""><%= user.role == 'user' ? 'Your Transfer History' : 'All Transfer History' %></span>
+            </a>
+
+            <a href="/queue" class='drawer-tile relative'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.566 11.021A7.016 7.016 0 0 0 19 5V4h1V2H4v2h1v1a7.016 7.016 0 0 0 3.434 6.021c.354.208.566.545.566.9v.158c0 .354-.212.69-.566.9A7.016 7.016 0 0 0 5 19v1H4v2h16v-2h-1v-1a7.014 7.014 0 0 0-3.433-6.02c-.355-.21-.567-.547-.567-.901v-.158c0-.355.212-.692.566-.9zm-1.015 3.681A5.008 5.008 0 0 1 17 19v1H7v-1a5.01 5.01 0 0 1 2.45-4.299c.971-.573 1.55-1.554 1.55-2.622v-.158c0-1.069-.58-2.051-1.551-2.623A5.008 5.008 0 0 1 7 5V4h10v1c0 1.76-.938 3.406-2.449 4.298C13.58 9.87 13 10.852 13 11.921v.158c0 1.068.579 2.049 1.551 2.623z"></path></svg>
+                <span class="">Blockchain Queue</span>
+
+                <span id="queue-length" class="bubble"><%= user.queueLength %></span>
+            </a>
+        </div>
+    </div>
+</nav>
