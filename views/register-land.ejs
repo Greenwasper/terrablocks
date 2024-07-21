@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Register Land</title>
+    <link rel="stylesheet" href="./css/modal.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body style="visibility: hidden;">
+    <%- include('../partials/drawer.ejs') %>
+
+    <main>
+        <%- include('../partials/loader.ejs') %>
+
+        <div id="content" class="bg-gray-200 min-h-screen mb-0">
+
+            <% if(previous){ %>
+                <div id="previousCoords" class="hidden">
+                    <% previous.previousCoords.forEach(coord => { %>
+                        <span><%- coord  %></span>
+                    <% }) %>       
+                </div>
+
+                <div id="previousTitle" class="hidden"><%= previous.previousTitle %></div>
+                <div id="errorMessage" class="hidden"><%= errorMessage %></div>
+            <% } %>
+
+            <h1 class="pt-3 text-center text-3xl">Register Land</h1>
+            <div class="mt-3">
+                <div id="map" class="h-56"></div>
+            </div>
+
+            <div class="hidden mt-4 w-full justify-between">
+                <div>
+                    <button id="remove-points" class="btn btn-red">Remove All Points</button>
+                </div>
+
+                <div>
+                    <button id="" class="btn btn-green">Get Land Details</button>
+                </div>
+            </div>
+
+            <div class="mt-3 rounded-lg shadow-lg bg-white px-4 py-5">
+                <h1 class="text-center font-semibold text-secondary text-xl">Coordinates</h1>
+                <h2 class="text-secondary font-semibold">Starting Coordinates</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="mt-3 floating-form">
+                        <input id="start-lng" placeholder=" " class="form-control" type="number" value="-1.5612222908680167">
+                        <label class="">Longitude</label>
+                    </div>
+                    <div class="mt-3 floating-form">
+                        <input id="start-lat" placeholder=" " class="form-control" type="number" value="6.6760060192907815">
+                        <label class="">Latitude</label>
+                    </div>
+                </div>
+
+                <h2 class="mt-3 text-secondary font-semibold">Bearings and Distances</h2>
+            
+                <div class="mt-3">
+                    <table id="points-table" class="table-auto bg-white border-collapse w-full">
+                        <thead>
+                            <th>#</th>
+                            <th>Degrees</th>
+                            <th>Minutes</th>
+                            <th>Seconds</th>
+                            <th>Distance</th>
+                            <th>Del.</th>
+                        </thead>
+
+                        <tbody>
+                            <tr class="hidden row-default">
+                                <td class="row-index"></td>
+                                <td class="p-4 border-b"><input type="number" class="form-control degrees" name="" id=""></td>    
+                                <td class="p-4 border-b"><input type="number" class="form-control minutes" name="" id=""></td>    
+                                <td class="p-4 border-b"><input type="number" class="form-control seconds" name="" id=""></td>    
+                                <td class="p-4 border-b"><input type="number" class="form-control distance"></td>
+                                <td><svg class="row-del cursor-pointer w-5 stroke-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center mt-4">
+                        <button id="row-add" class="btn-sm btn-outline-green cursor-pointer">Add Point</button>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button id="get-land-details" class="btn btn-secondary cursor-pointer">Get Land Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 bg-white p-5 rounded-lg shadow-lg">
+                <div class="land-details-container col-span-20 xl:col-span-14">
+                    <h1 class="bold text-lg">Land Title Details</h1>
+                    <hr class="my-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="land-input">
+                            <label class="" for="">Land Title</label>
+                            <input placeholder="Enter land name..." class="form-control" type="text" id='land-title' name='' value=''>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Land Size/Area</label>
+                            <input placeholder=" " class="form-control" type="text" id='land-size' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Digital Address</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='GPSName' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Country</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='country' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Region</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='Region' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Suburb</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='Area' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">District</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='District' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Street</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='Street' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Post Code</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='PostCode' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Lat/Lng</label>
+                            <input placeholder=" " class="form-control" type="text" id='latlng' name='' value='' readonly>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+
+            <div class="mt-4 pb-7 flex justify-end">
+                <button id="modal-trigger" class="btn btn-green">Register Land</button>
+            </div>
+
+            <div class="modal micromodal-slide" id="register-land-modal" aria-hidden="true">
+                <div class="modal__overlay" tabindex="-1">
+                    <form action="/register-land/register" method="post" class="modal__container mb-0 rounded-lg w-full mx-8 sm:w-sm sm:mx-0" role="dialog" aria-modal="true" aria-labelledby="register-land-modal-title">
+                        <div class="p-8 max-h-[85%]">
+                            <header class="modal__header">
+                                <h2 class="modal__title text-primary" id="register-land-modal-title">Register Land</h2>
+                                <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                            </header>
+                            <main class="modal__content my-4" id="register-land-modal-content">
+                                <h1 class="">Are you sure you want to register this land?</h1>
+                                <p class="mt-2">This action is <b class="text-red-700">not reversible</b>. Please close this dialog box and confirm all the details you have inputted below.</p>
+                                <div class="mt-6 floating-form">
+                                    <input placeholder=" " class="form-control" type="password" name='passwordConfirm' id="passwordConfirm" required>
+                                    <label for="passwordConfirm">Enter account password to confirm</label>
+                                </div>
+                                <input type="hidden" name="feature" id="hidden-land-feature">
+                                <input type="hidden" name="land_name" id="hidden-land-name">
+                            </main>
+                            <footer class="modal__footer text-right">
+                                <button class="btn-sm btn-outline-red mr-2" data-micromodal-close aria-label="Close this dialog window">Cancel</button>
+                                <button class="btn-sm btn-secondary">Register Land</button>
+                            </footer>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="./js/functions.js"></script>
+    <script src="./js/drawer.js"></script>
+
+    <script>
+        MicroModal.init({
+            disableScroll: true,
+            disableFocus: true
+        });
+
+        document.querySelector('#register-land-modal form').addEventListener('submit', e => {
+            e.preventDefault();
+
+            MicroModal.close('register-land-modal');
+            document.querySelector('body').style.overflow = 'hidden';
+            document.querySelector('#overlay').classList.remove('invisible');
+
+            document.querySelector('#register-land-modal form').submit();
+        });
+
+        async function initMap() {
+            var geoJsonUrl = "apis/getLands" + "?nocache=" + (new Date()).getTime();
+            var knust = {lat: 6.6760, lng: -1.5614};
+            var initialZoom = 15;
+
+            var validLand = false;
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: initialZoom,
+                center: knust, // KNUST
+                mapTypeId:google.maps.MapTypeId.HYBRID,
+            });
+
+            // if(document.querySelectorAll('#previousCoords span').length != 0){
+
+            //     Array.from(document.querySelectorAll('#previousCoords span')).forEach(coord => {
+            //         points.push({lat: parseFloat(coord.textContent.split(',')[1]), lng: parseFloat(coord.textContent.split(',')[0])});
+            //     });
+
+            //     points.pop();
+
+            //     createFeature();
+
+            //     document.querySelector('#land-title').value = document.querySelector('#previousTitle').textContent;
+
+            //     toastRed(document.querySelector("#errorMessage").textContent);
+            // }
+
+            function clearAllPoints() {
+
+                validLand = false;
+
+                map.data.forEach(function (feature) {
+                    map.data.remove(feature);
+                });
+
+                Array.from(document.querySelectorAll('.land-detail')).forEach(element => {
+                    element.value = "";
+                });
+            }
+
+            function getLandDetails (center, feature) {
+
+                Array.from(document.querySelectorAll('.land-detail')).forEach(element => {
+                    element.value = "Fetching Info...";
+                });
+
+                $.ajax({
+                    type: 'post',
+                    url: '/apis/get-land-details',
+                    data: {lat: center.lat, lng: center.lng},
+                    error: (xhr, status, error) => {
+                        console.log(xhr.statusText);
+                        Array.from(document.querySelectorAll('.land-detail')).forEach(element => {
+                            element.value = "Error Fetching Info";
+                            element.style.color = red;
+                        });
+                        validLand = false;
+                    },
+                    success: function(res){
+                        try{
+                            let landDetails = res['data']['Table'][0];
+
+                            landDetails['GPSName'] = insertHyphens(landDetails['GPSName']);
+
+                            for(let key in landDetails){
+                                if(key != 'NLat' && key != 'Slat' && key != 'WLong' && key != 'Elong' && key != 'AddressV1'){
+                                    document.querySelector('#' + key).value = landDetails[key];
+                                }
+                            }
+
+                            document.querySelector('#country').value = 'Ghana';
+
+                            validLand = JSON.stringify(feature);
+                            
+                        } catch (e) {
+                            Array.from(document.querySelectorAll('.land-detail')).forEach(element => {
+                                element.value = "Error Fetching Info";
+                                element.style.color = red;
+                            });
+                            validLand = false;
+                        }
+                    }
+                });
+            }
+
+            function validateLandName () {
+                let landName = document.querySelector('#land-title').value;
+
+                if(landName == ''){
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.querySelector('#modal-trigger').addEventListener('click', e => {
+                if(validLand && validateLandName()){
+                    document.querySelector('#hidden-land-feature').value = validLand;
+                    document.querySelector('#hidden-land-name').value = document.querySelector('#land-title').value.trim();
+                    MicroModal.show('register-land-modal');
+
+                    console.log(validLand);
+                    console.log(document.querySelector('#land-title').value);
+                }
+
+                else{
+                    alert("Incorrect Information");
+                }
+            });
+
+            function createGeoJSONFeature(startingPoint, points) {
+                const coordinates = [startingPoint];
+
+                points.forEach(([d, b]) => {
+                    var point = turf.point(coordinates[coordinates.length - 1]);
+                    var distance = d/5280;
+                    var bearing = b;
+                    var options = { units: "miles" };
+                    var newPoint = turf.destination(point, distance, bearing, options).geometry.coordinates;
+                    coordinates.push(newPoint);
+                });
+
+                coordinates.push(startingPoint);
+
+                const feature = {
+                    "type": "Feature",
+                    "geometry": {
+                        "coordinates": [coordinates],
+                        "type": "Polygon"
+                    },
+                    "properties": {}
+                };
+
+                clearAllPoints();
+
+                map.data.addGeoJson(feature);
+
+                const bbox = turf.bbox(turf.polygon(feature.geometry.coordinates));
+                const center = turf.center(turf.bboxPolygon(bbox));
+                const featureCenter = {lat: center.geometry.coordinates[1], lng: center.geometry.coordinates[0]};
+
+                const featureArea = turf.area(feature);
+
+                document.querySelector('#latlng').value = `${featureCenter.lat}, ${featureCenter.lng}`;
+                document.querySelector('#land-size').value = `${formatNumber(featureArea)} square metres`;
+
+                getLandDetails(featureCenter, feature);
+
+                map.data.setStyle(function(feature) {
+                    return {
+                        fillColor: green,
+                        strokeWeight: 1,
+                        strokeColor: green
+                    };
+                });
+
+                map.panTo(featureCenter);
+
+                let zoom = 17;
+
+                if(featureArea < 2000){
+                    zoom = 19;
+                }
+
+                map.setZoom(zoom);
+
+                return feature;
+            }
+
+            let addBtn = document.querySelector('#row-add');
+            let rows = document.querySelectorAll('.row');
+
+            $('#points-table').on("click", ".row-del", function(e){
+                $(this).parent('td').parent('tr').remove();
+                assignRowNumbers();
+            });
+
+            addBtn.addEventListener('click', e => {
+                // Add New Row
+                let newRow = document.querySelector('.row-default').cloneNode(true);
+                newRow.classList.remove('hidden');
+                newRow.classList.remove('row-default');
+                newRow.classList.add('row');
+
+                document.querySelector('#points-table tbody').append(newRow);
+
+                assignRowNumbers();
+            });
+
+            function assignRowNumbers () {
+                rows = document.querySelectorAll('.row');
+
+                Array.from(rows).forEach((element, index) => {
+                    element.querySelector('.row-index').textContent = index+1;
+                });
+            }
+
+            document.querySelector('#get-land-details').addEventListener('click', e => {
+                rows = document.querySelectorAll('.row');
+                let startingPoint = [parseFloat(document.querySelector('#start-lng').value), parseFloat(document.querySelector('#start-lat').value)];
+                let points = [];
+
+                if(rows.length < 2){
+                    alert("At least two points are needed.");
+                    throw new Error("Invalid values detected");
+                }
+
+                Array.from(rows).forEach((row, index) => {
+                    // validation
+
+                    if(row.querySelector('.degrees').value == '' || row.querySelector('.distance').value == ''){
+                        alert("Invalid values detected");
+                        throw new Error("Invalid values detected");
+                    }
+
+                    if(parseFloat(row.querySelector('.degrees').value) < -180 || parseFloat(row.querySelector('.degrees').value) > 360){
+                        alert("Invalid values detected.");
+                        throw new Error("Invalid values detected");
+                    }
+
+                    let bearing = dmsToDecimalDegrees(row.querySelector('.degrees').value, row.querySelector('.minutes').value, row.querySelector('.seconds').value);
+                    points.push([parseFloat(row.querySelector('.distance').value), convertBearing(bearing)]);
+                });
+
+                console.log(startingPoint);
+                console.log(points);
+
+                const geojsonFeature = createGeoJSONFeature(startingPoint, points);
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth' // This enables smooth scrolling
+                });
+                // try{
+                //     map.data.addGeoJson(geojsonFeature);
+                // } catch(e){
+                //     console.log(e);
+                //     alert("An error occurred when getting land details");
+                // }
+            });
+        }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbX35EomdiUVLLs74eAfYLQv1aMwAjCNg&libraries=places&callback=initMap" async defer></script>
+</body>
+</html>

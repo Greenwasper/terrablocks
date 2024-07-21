@@ -1,0 +1,105 @@
+<html lang="en" class="bg-gray-200">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Profile</title>
+    <link rel="stylesheet" href="./css/upload.css">
+</head>
+<body class="">
+    <%- include('../partials/drawer.ejs') %>
+
+    <main>
+        <div id="content" class="!p-0 min-h-screen bg-gray-200">
+            <h1 class="text-2xl text-center py-7">Profile</h1>
+
+            <div class="flex justify-center items-center text-xl flex-wrap gap-2">
+                <h1 class="">Your ETH address is:</h1>
+                <span id="eth-address" class="font-bold truncate"><%= user.eth_address %></span>
+                <ion-icon id="copy-eth-address" name="copy-outline" class="cursor-pointer"></ion-icon>
+                <ion-icon id="copy-eth-address-check" name="checkmark-outline" class="hidden"></ion-icon>
+            </div>
+
+            <form id="profile-img-form" action="/profile/upload" method="post" enctype="multipart/form-data">
+                <div class="mt-7 h-[120px]">
+                    <div class="profile-pic-div">
+                        <img src="assets/profile-img/<%= `${user.eth_address}.jpg` %>" onerror="this.onerror=null; this.src='assets/upload-default.jpg';" id="photo">
+                        <input type="file" id="file" accept="image/jpg" name="profile-img">
+                        <label for="file" id="uploadBtn">
+                          <svg viewBox="0 0 24 24"><path d="M12 9c-1.626 0-3 1.374-3 3s1.374 3 3 3 3-1.374 3-3-1.374-3-3-3z"></path><path d="M20 5h-2.586l-2.707-2.707A.996.996 0 0 0 14 2h-4a.996.996 0 0 0-.707.293L6.586 5H4c-1.103 0-2 .897-2 2v11c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2zm-8 12c-2.71 0-5-2.29-5-5s2.29-5 5-5 5 2.29 5 5-2.29 5-5 5z"></path></svg>
+                          <span>Choose Image</span>
+                        </label>
+                    </div>
+                    <div id="bg"></div>
+                    <div id="img"></div>
+                </div>
+            </form>
+
+            <div class="mt-9">
+                <h1 class="text-2xl font-semibold text-secondary text-center">Account Information</h1>
+                <div class="mt-7 grid grid-cols-1 xs:grid-cols-2 gap-5 max-w-[925px] px-5 mx-auto">
+                    <div class="land-input">
+                        <label class="" for="">First Name</label>
+                        <input placeholder=" " class="form-control" type="text" name='' value='<%= user.first_name %>' readonly>
+                    </div>
+                    <div class="land-input">
+                        <label class="" for="">Last Name</label>
+                        <input placeholder=" " class="form-control" type="text" name='' value='<%= user.last_name %>' readonly>
+                    </div>
+                    <div class="land-input">
+                        <label class="" for="">Other Names</label>
+                        <input placeholder=" " class="form-control land-detail" type="text" name='' value='<%= user.other_names %>' readonly>
+                    </div>
+                    <div class="land-input">
+                        <label class="" for="">Phone Number</label>
+                        <input placeholder=" " class="form-control land-detail" type="text" name='' value='<%= user.phone %>' readonly>
+                    </div>
+                    <div class="land-input">
+                        <label class="" for="">Email</label>
+                        <input placeholder=" " class="form-control land-detail" type="text" name='' value='<%= user.email %>' readonly>
+                    </div>
+                    <div class="land-input">
+                        <label class="" for="">Ghana Card</label>
+                        <input placeholder=" " class="form-control land-detail" type="text" name='' value='<%= user.ghana_card %>' readonly>
+                    </div>
+                    <% if(user.role == 'superuser'){ %>
+                        <div class="land-input">
+                            <label class="" for="">Affiliation</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" name='' value='<%= user.party %>' readonly>
+                        </div>   
+                        <div class="land-input">
+                            <label class="" for="">Superuser Code</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" name='' value='<%= user.code %>' readonly>
+                        </div>    
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="./js/functions.js"></script>
+    <script src="./js/drawer.js"></script>
+
+    <script>
+        document.querySelector('#copy-eth-address').addEventListener('click', e => {
+            navigator.clipboard.writeText(document.querySelector('#eth-address').textContent);
+            document.querySelector('#copy-eth-address-check').classList.toggle('hidden');
+            document.querySelector('#copy-eth-address').classList.toggle('hidden');
+
+            setTimeout(() => {
+                document.querySelector('#copy-eth-address-check').classList.toggle('hidden');
+                document.querySelector('#copy-eth-address').classList.toggle('hidden');
+            }, 2000);
+        });
+
+        document.querySelector('#file').addEventListener('input', e => {
+
+            // show overlay
+
+            document.querySelector('#profile-img-form').submit();
+        });
+    </script>
+</body>
+</html>

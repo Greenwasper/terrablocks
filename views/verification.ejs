@@ -1,0 +1,145 @@
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Verification</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body class="">
+    
+    <main class="bg-gray-200 h-screen flex justify-center items-center">
+
+        <div id="eth-address" class="hidden"><%= user.eth_address %></div>
+        <div id="incorrectPhoneOtp" class="hidden"><%= incorrectPhoneOtp %></div>
+        <div id="incorrectEmailOtp" class="hidden"><%= incorrectEmailOtp %></div>
+
+        <div class="grid grid-cols-1 md-2:grid-cols-2 gap-8 px-3 sm:px-10 min-w-[80%]">
+            <div class="hidden md-2:flex items-center grid-cols-1 max-w-[530px] py-4 pr-10">
+                <img src="./assets/verification.svg" alt="verification">
+            </div>
+
+            <form action="/verification/verify?eth=<%= user.eth_address %>" method="post" class="mb-0 grid-cols-1 w-full bg-white shadow-xl text-center py-9 px-7 rounded-xl max-w-full md-2:max-w-[530px]">
+                <h1 class="text-2xl text-secondary font-bold">Verification</h1>
+
+                <% if(user.phone_verified != 'true'){ %>
+                    <p class="mt-2 text-gray-400 text-sm">An OTP will be sent to <%= user.phone %></p>
+
+                    <div class="w-full relative mt-3">
+                        <input class="form-control otp-input" type="text" name="phoneOTP" id="phoneOTP" placeholder="Enter OTP" autocomplete="off">
+                        <button data-for="phone" class="send bg-secondary text-white flex justify-center items-center absolute w-24 h-full top-0 right-0 rounded-r-md text-sm">Send Code</button>
+                    </div>
+                <% } else { %>
+                    <div class="mt-4 flex flex-col items-center gap-2">
+                        <h1 class="text-2xl text-secondary">Phone Number Verified</h1>
+                        <ion-icon class="text-[80px] text-green-500" name="checkmark-circle-outline"></ion-icon>
+                    </div>
+                <% } %>
+                <% if(user.email_verified != 'true'){ %>
+                    <p class="mt-6 text-gray-400 text-sm">A verification code will be sent to <%= user.email %></p>
+
+                    <div class="w-full relative mt-3">
+                        <input class="form-control otp-input" type="text" name="emailOTP" id="emailOTP" placeholder="Enter verification code" autocomplete="off">
+                        <button data-for="email" class="send bg-secondary text-white flex justify-center items-center absolute w-24 h-full top-0 right-0 rounded-r-md text-sm">Send Code</button>
+                    </div>
+                <% } else { %>
+                    <div class="mt-4 flex flex-col items-center gap-2">
+                        <h1 class="text-2xl text-secondary">Email Address Verified</h1>
+                        <ion-icon class="text-[80px] text-green-500" name="checkmark-circle-outline"></ion-icon>
+                    </div>
+                <% } %>
+
+                <div class="mt-6 flex justify-center">
+                    <% if(verificationComplete){ %>
+                        <a href="/login" class="btn btn-outline-secondary">Continue to login</a>
+                    <% } else { %>
+                        <button class="btn btn-outline-secondary">Continue</button>
+                    <% } %>
+                </div>
+                <% if(!verificationComplete){ %>
+                    <div>
+                        <a href="/login" class="inline-block mt-3 underline text-sm text-secondary">Continue without verification</a>
+                    </div>
+                <% } %>
+            </form>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="./intl-input/js/intlTelInput.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/libphonenumber-js/bundle/libphonenumber-max.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phone-number-input-field"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="./js/functions.js"></script>
+
+    <script>
+
+        if(document.querySelector('#incorrectPhoneOtp').textContent == "true"){
+            toastRed("Incorrect Otp");
+            window.history.pushState('html', '', `/verification?eth=${document.querySelector('#eth-address').textContent}`);
+        }
+
+        if(document.querySelector('#incorrectEmailOtp').textContent == "true"){
+            toastRed("Incorrect Email Verification code");
+            window.history.pushState('html', '', `/verification?eth=${document.querySelector('#eth-address').textContent}`);
+        }
+
+        Array.from(document.querySelectorAll('.otp-input')).forEach(input => {
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        Array.from(document.querySelectorAll('.send')).forEach(btn => {
+            let counter = 0;
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+
+                if(counter > 0){
+                    console.log("counter in progress");
+                    return;
+                }
+
+                console.log("send otp");
+                btn.disabled = true;
+
+                counter = 60;
+
+                let interval = setInterval(() => {
+                    counter--;
+                    btn.textContent = `Resend in ${counter}s`;
+
+                    if (counter <= 0){
+                        clearInterval(interval);
+                        btn.textContent = "Resend";
+                        btn.disabled = false;
+                    }
+
+                }, 1000);
+
+                $.ajax({
+                    type: 'post',
+                    url: '/apis/send-code',
+                    data: {eth_address: document.querySelector('#eth-address').textContent, for: btn.getAttribute('data-for')},
+                    error: (xhr, status, error) => {
+                        counter = 0;
+                        clearInterval(interval);
+                        btn.textContent = "Resend";
+                        btn.disabled = false;
+                        toastRed("An error occurred. Please try again");
+                        console.log(xhr.statusText);
+                    },
+                    success: function(res){
+                        // toastGreen("OTP sent");
+                        console.log(res);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

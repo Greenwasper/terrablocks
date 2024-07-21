@@ -1,0 +1,448 @@
+<html lang="en" class="bg-gray-200">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Plot</title>
+    <link rel="stylesheet" href="./css/modal.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body style="visibility: hidden;">
+    <%- include('../partials/drawer.ejs') %>
+
+    <main>
+        <div id="content" class="bg-gray-200">
+            <div id="map" class="h-64"></div>
+
+            <div id="featureDiv"class="hidden"><%- JSON.stringify(feature) %></div>
+            <div id="incorrectPassword" class="hidden"><%= incorrectPassword %></div>
+            <div id="invalidAddress" class="hidden"><%= invalidAddress %></div>
+            <div id="landId" class="hidden"><%= feature.properties.id %></div>
+
+            <% if(buttonEnablers.showValidationStatus){ %>
+                <div class="dashboard-tile">
+                    <h1 class="">Validation Status</h1>
+                    <div class="mt-4 grid grid-cols-4 gap-3">
+                        <% Object.entries(acks).forEach(([key, value]) => { %>
+                            <div>
+                                <div class="h-2 rounded-md <%= value ? 'background-secondary' : 'background-gray' %>"></div>
+                                <div class="mt-3 flex items-center gap-2">
+                                    <ion-icon class="text-xl text-red-500 <%= value ? 'hidden' : '' %>" name="close-circle-outline"></ion-icon>
+                                    <ion-icon class="text-xl text-green-500 <%= value ? '' : 'hidden' %>" name="checkmark-circle-outline"></ion-icon>
+                                    <p class="inline-block"><%= key %> Validated</p>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            <% } %>
+
+            <div class="grid grid-cols-20 gap-5 mt-8 p-3 xs:p-10 shadow-lg rounded-md bg-white">
+                <div class="land-details-container col-span-20 xl:col-span-20">
+                    <h1 class="bold text-lg">Land Title Details</h1>
+                    <hr class="my-3">
+                    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 md-2:grid-cols-2 gap-5">
+                        <div class="land-input">
+                            <label class="" for="">Land Title</label>
+                            <input placeholder=" " class="form-control" type="text" id='land-title' name='' value='<%= feature.properties.name %>' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Land Size/Area</label>
+                            <input placeholder=" " class="form-control" type="text" id='land-size' name='' value='<%= feature.properties.area %> square metres' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Digital Address</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='GPSName' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Country</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='country' name='' value='Ghana' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Region</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='Region' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Suburb</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='Area' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">District</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='District' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Street</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='Street' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Post Code</label>
+                            <input placeholder=" " class="form-control land-detail" type="text" id='PostCode' name='' value='' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Lat/Lng</label>
+                            <input placeholder=" " class="form-control" type="text" id='latlng' name='' value='<%= `${feature.properties.lat}, ${feature.properties.lng}` %>' readonly>
+                        </div>
+                        <div class="land-input">
+                            <label class="" for="">Status</label>
+                            <input <%= `style=color:${feature.properties.statusColor};` %> placeholder=" " class="form-control font-bold" type="text" id='status' name='' value='<%= feature.properties.statusText %>' readonly>
+                        </div>
+                    </div>
+                </div>
+                <% if(buttonEnablers.showOwnerDetails){ %>
+                    <div class="col-span-20 xl:col-span-20">
+                        <div class="land-details-container">
+                            <h1>Owner Details</h1>
+                            <hr class="my-3">
+                            <div class="grid gap-3">
+                                <div class="land-input">
+                                    <label class="" for="">Owner Name</label>
+                                    <input placeholder=" " class="form-control" type="text" id='seller-name' name='' value='<%= owner.name %>' readonly>
+                                </div>
+
+                                <% if(Object.keys(owner).length > 1){ %>
+
+                                <div class="land-input">
+                                    <label class="" for="">Owner Email</label>
+                                    <input placeholder=" " class="form-control" type="text" id='seller-email' name='' value='<%= owner.email %>' readonly>
+                                </div>
+
+                                <div class="land-input">
+                                    <label class="" for="">Owner Phone</label>
+                                    <input placeholder=" " class="form-control" type="text" id='seller-phone' name='' value='<%= owner.phone %>' readonly>
+                                </div>
+
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 land-details-container">
+                            <h1><%= buttonEnablers.isClaim ? 'Claimer Details' : 'Buyer Details' %></h1>
+                            <hr class="my-3">
+                            <div class="grid gap-3">
+                                <div class="land-input">
+                                    <label class="" for=""><%= buttonEnablers.isClaim ? 'Claimer Address' : 'Buyer Address' %></label>
+                                    <input placeholder=" " class="form-control" type="text" id='buyer-name' name='' value='<%= buyer.name %>' readonly>
+                                </div>
+
+                                <% if(Object.keys(buyer).length > 1){ %>
+
+                                <div class="land-input">
+                                    <label class="" for=""><%= buttonEnablers.isClaim ? 'Claimer Email' : 'Buyer Email' %></label>
+                                    <input placeholder=" " class="form-control" type="text" id='buyer-email' name='' value='<%= buyer.email %>' readonly>
+                                </div>
+
+                                <div class="land-input">
+                                    <label class="" for=""><%= buttonEnablers.isClaim ? 'Claimer Phone' : 'Buyer Phone' %></label>
+                                    <input placeholder=" " class="form-control" type="text" id='buyer-phone' name='' value='<%= buyer.phone %>' readonly>
+                                </div>
+
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <% if(buttonEnablers.notes != ''){ %>
+                            <div class="mt-5 land-details-container">
+                                <h1>Previous Acknowledger Notes</h1>
+                                <hr class="my-3">
+                                <textarea name="" class="form-control max-h-[100px]" readonly><%= buttonEnablers.notes %></textarea>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <% if(buttonEnablers.claimLand){ %>
+                    <div class="col-span-full">
+                        <button data-micromodal-trigger="transfer-modal" class="btn btn-secondary">Claim Land</button>
+                    </div>
+                <% } %>
+                <% if(buttonEnablers.beginTransfer){ %>
+                    <div class="col-span-full">
+                        <button data-micromodal-trigger="transfer-modal" class="btn btn-secondary">Begin Transfer</button>
+                    </div>
+                <% } %>
+                <% if(buttonEnablers.acknowledgeTransfer){ %>
+                    <div class="col-span-full">
+                        <button data-micromodal-trigger="transfer-modal" class="btn btn-green">Acknowledge Transfer</button>
+                    </div>
+                <% } %>
+                <% if(buttonEnablers.verifyTransfer){ %>
+                    <div class="col-span-full">
+                        <button class="btn btn-green" data-micromodal-trigger="verify-modal">Verify Transfer</button>
+                    </div>
+                <% } %>
+                <% if(buttonEnablers.ackComplete){ %>
+                    <div class="col-span-full">
+                        <div class="border border-green-500 rounded-lg px-3 py-3 inline-flex items-center gap-3">
+                            <ion-icon class="text-xl text-green-500" name="checkmark-done-outline"></ion-icon>
+                            <span>Acknowledgement Complete</span>
+                        </div>
+                    </div>
+                <% } %>
+
+                <div class="col-span-full">
+                    <a href="/land-history/<%= feature.properties.id %>" class="btn btn-secondary">View Transfer History</a>
+                </div>
+            </div>
+
+            <% if(buttonEnablers.claimLand){ %>
+
+                <div class="modal micromodal-slide" id="transfer-modal" aria-hidden="true">
+                    <div class="modal__overlay" tabindex="-1">
+                        <form action="/plot/claimLand" method="post" class="modal__container mb-0 rounded-lg w-full mx-8 sm:w-sm sm:mx-0" role="dialog" aria-modal="true" aria-labelledby="sell-code-modal-title">
+                            <div class="p-8 max-h-[85%]">
+                                <header class="modal__header">
+                                    <h2 class="modal__title text-primary" id="sell-code-modal-title">Claim Land</h2>
+                                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                                </header>
+                                <main class="modal__content my-4" id="sell-code-modal-content">
+                                    <p>This action is <b class="text-red-700">not reversible</b>. Please close this dialog box and confirm all the details before proceeding.</p>
+                                    <!-- <h1 class="mt-3 font-semibold">Enter buyer's ETH address</h1> -->
+                                    <!-- <input type="text" autocomplete="off" class="mt-3 form-control" id="buyerAddress" name="buyerAddress" placeholder="0x...." required> -->
+                                    <!-- <p class="mt-2 text-gray-600 text-sm">Name: <span class="inline-block" id="modal-buyer-name"></span></p> -->
+                                    <div class="mt-6 floating-form">
+                                        <input placeholder=" " class="form-control" type="password" name='passwordConfirm' id="passwordConfirm" required>
+                                        <label for="passwordConfirm">Enter account password to confirm</label>
+                                    </div>
+                                    <div class="mt-6 floating-form">
+                                        <textarea name="notes" class="form-control" placeholder="Enter notes here..."></textarea>
+                                    </div>
+                                    <input type="hidden" name="landId" value="<%= feature.properties.id %>">
+                                </main>
+                                <footer class="modal__footer text-right">
+                                    <button class="btn-sm btn-outline-red mr-2" data-micromodal-close aria-label="Close this dialog window">Cancel</button>
+                                    <button class="btn-sm btn-secondary">Claim Land</button>
+                                </footer>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+    
+            <% } %>
+
+            <% if(buttonEnablers.beginTransfer){ %>
+
+                <div class="modal micromodal-slide" id="transfer-modal" aria-hidden="true">
+                    <div class="modal__overlay" tabindex="-1">
+                        <form action="/plot/beginTransfer" method="post" class="modal__container mb-0 rounded-lg w-full mx-8 sm:w-sm sm:mx-0" role="dialog" aria-modal="true" aria-labelledby="sell-code-modal-title">
+                            <div class="p-8 max-h-[85%]">
+                                <header class="modal__header">
+                                    <h2 class="modal__title text-primary" id="sell-code-modal-title">Begin Transfer</h2>
+                                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                                </header>
+                                <main class="modal__content my-4" id="sell-code-modal-content">
+                                    <p>This action is <b class="text-red-700">not reversible</b>. Please close this dialog box and confirm all the details before proceeding.</p>
+                                    <h1 class="mt-3 font-semibold">Enter buyer's ETH address</h1>
+                                    <input type="text" autocomplete="off" class="mt-3 form-control" id="buyerAddress" name="buyerAddress" placeholder="0x...." required>
+                                    <p class="mt-2 text-gray-600 text-sm">Name: <span class="inline-block" id="modal-buyer-name"></span></p>
+                                    <div class="mt-6 floating-form">
+                                        <input placeholder=" " class="form-control" type="password" name='passwordConfirm' id="passwordConfirm" required>
+                                        <label for="passwordConfirm">Enter account password to confirm</label>
+                                    </div>
+                                    <div class="mt-6 floating-form">
+                                        <textarea name="notes" class="form-control" placeholder="Enter notes here..."></textarea>
+                                    </div>
+                                    <input type="hidden" name="landId" value="<%= feature.properties.id %>">
+                                </main>
+                                <footer class="modal__footer text-right">
+                                    <button class="btn-sm btn-outline-red mr-2" data-micromodal-close aria-label="Close this dialog window">Cancel</button>
+                                    <button class="btn-sm btn-secondary">Begin Transfer</button>
+                                </footer>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+    
+            <% } %>
+            
+            <% if(buttonEnablers.acknowledgeTransfer){ %>
+
+                <div class="modal micromodal-slide" id="transfer-modal" aria-hidden="true">
+                    <div class="modal__overlay" tabindex="-1">
+                        <form action="/plot/acknowledgeTransfer" method="post" class="modal__container mb-0 rounded-lg w-full mx-8 sm:w-sm sm:mx-0" role="dialog" aria-modal="true" aria-labelledby="sell-code-modal-title">
+                            <div class="p-8 max-h-[85%]">
+                                <header class="modal__header">
+                                    <h2 class="modal__title text-primary" id="sell-code-modal-title">Acknowledge Transfer</h2>
+                                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                                </header>
+                                <main class="modal__content my-4" id="sell-code-modal-content">
+                                    <h1>Are you sure you want to acknowledge this transfer?</h1>
+                                    <p class="mt-2">This action is <b class="text-red-700">not reversible</b>. Please close this dialog box and confirm all details before proceeding.</p>
+                                    <div class="mt-6 floating-form">
+                                        <input placeholder=" " class="form-control" type="password" name='passwordConfirm' id="passwordConfirm" required>
+                                        <label for="passwordConfirm">Enter account password to confirm</label>
+                                    </div>
+                                    <div class="mt-6 floating-form">
+                                        <textarea name="notes" class="form-control" placeholder="Enter notes here..."></textarea>
+                                    </div>
+                                    <input type="hidden" name="landId" value="<%= feature.properties.id %>">
+                                </main>
+                                <footer class="modal__footer text-right">
+                                    <button class="btn-sm btn-outline-red mr-2" data-micromodal-close aria-label="Close this dialog window">Cancel</button>
+                                    <button class="btn-sm btn-secondary">Acknowledge Transfer</button>
+                                </footer>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            <% } %>
+
+            <% if(buttonEnablers.verifyTransfer){ %>
+
+                <div class="modal micromodal-slide" id="verify-modal" aria-hidden="true">
+                    <div class="modal__overlay" tabindex="-1">
+                        <form action="/plot/verifyTransfer" method="post" class="modal__container mb-0 rounded-lg w-full mx-8 sm:w-sm sm:mx-0" role="dialog" aria-modal="true" aria-labelledby="sell-code-modal-title">
+                            <div class="p-8 max-h-[85%]">
+                                <header class="modal__header">
+                                    <h2 class="modal__title text-primary" id="sell-code-modal-title">Verify Transfer</h2>
+                                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                                </header>
+                                <main class="modal__content my-4" id="sell-code-modal-content">
+                                    <h1 class="">Are you sure you want to transfer ownership of this land?</h1>
+                                    <p class="mt-2">This action is <b class="text-red-700">not reversible</b>. Please close this dialog box and confirm all the owner and buyer details before proceeding.</p>
+                                    <input type="hidden" name="landId" value="<%= feature.properties.id %>">
+                                    <div class="mt-6 floating-form">
+                                        <input placeholder=" " class="form-control" type="password" name='passwordConfirm' id="passwordConfirm" required>
+                                        <label for="passwordConfirm">Enter account password to confirm</label>
+                                    </div>
+                                    <div class="mt-6 floating-form">
+                                        <textarea name="notes" class="form-control" placeholder="Enter notes here..."></textarea>
+                                    </div>
+                                </main>
+                                <footer class="modal__footer text-right">
+                                    <button class="btn-sm btn-outline-red mr-2" data-micromodal-close aria-label="Close this dialog window">Cancel</button>
+                                    <button class="btn-sm btn-secondary">Verify Transfer</button>
+                                </footer>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+    
+            <% } %>
+            
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="./js/functions.js"></script>
+    <script src="./js/drawer.js"></script>
+
+    <script>
+
+        MicroModal.init({
+            disableScroll: true,
+            disableFocus: true
+        });
+
+        if(document.querySelector('#incorrectPassword').textContent == "true"){
+            toastRed("Incorrect Password");
+            window.history.pushState('html', '', `/plot/${document.querySelector('#landId').textContent}`);
+        }
+
+        if(document.querySelector('#invalidAddress').textContent == "true"){
+            toastRed("Invalid Address");
+            window.history.pushState('html', '', `/plot/${document.querySelector('#landId').textContent}`);
+        }
+
+        try{
+            document.querySelector('#buyerAddress').addEventListener('input', e => {
+                document.querySelector('#modal-buyer-name').textContent = "Fetching Info";
+                $.ajax({
+                    type: 'post',
+                    url: '/apis/get-owner-details',
+                    data: {eth_address: e.target.value, obscure: true},
+                    error: (xhr, status, error) => {
+                        console.log(xhr.statusText);
+                        document.querySelector('#modal-buyer-name').textContent = "User not found";
+                    },
+                    success: (res) => {
+                        let ownerDetails = res;
+                        document.querySelector('#modal-buyer-name').textContent = ownerDetails.name;
+                    }
+                });
+            });
+        } catch(e){}
+
+        async function initMap () {
+            const feature = JSON.parse(document.querySelector('#featureDiv').textContent);
+            var knust = {lat: 6.6760, lng: -1.5614};
+            var initialZoom = 15;
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: initialZoom,
+                center: knust, // KNUST
+                mapTypeId:google.maps.MapTypeId.HYBRID,
+                draggable: false
+            });
+
+            map.data.addGeoJson(feature);
+
+            map.data.setStyle(function(feature) {
+                return {
+                    fillColor: feature.getProperty('plotColor'),
+                    strokeWeight: 1,
+                    strokeColor: feature.getProperty('strokeColor')
+                };
+            });
+
+            map.panTo(new google.maps.LatLng(feature.properties.lat, feature.properties.lng));
+
+            let zoom;
+            zoom = 19;
+
+            map.setZoom(zoom);
+
+            Array.from(document.querySelectorAll('.land-detail')).forEach(element => {
+                element.value = "Fetching info...";
+                element.style.color = "black";
+            });
+
+            let coords = document.querySelector('#latlng').value.split(',');
+
+            $.ajax({
+                type: 'post',
+                url: '/apis/get-land-details',
+                data: {lat: parseFloat(coords[0]), lng: parseFloat(coords[1])},
+                error: (xhr, status, error) => {
+                    console.log(xhr.statusText);
+                    Array.from(document.querySelectorAll('.land-detail')).forEach(element => {
+                        element.value = "Error fetching info";
+                        element.style.color = red;
+                    });
+                },
+                success: function(res){
+                    // console.log(res);
+                    try{
+                        let landDetails = res['data']['Table'][0];
+
+                        landDetails['GPSName'] = insertHyphens(landDetails['GPSName']);
+
+                        for(let key in landDetails){
+                            if(key != 'NLat' && key != 'Slat' && key != 'WLong' && key != 'Elong' && key != 'AddressV1'){
+                                document.querySelector('#' + key).value = landDetails[key];
+                            }
+                        }
+
+                        document.querySelector('#country').value = 'Ghana';
+                    } catch (e) {
+                        Array.from(document.querySelectorAll('.land-detail')).forEach(element => {
+                            element.value = "Error Fetching Info";
+                            element.style.color = red;
+                        });
+                    }
+                }
+            });
+        }
+
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbX35EomdiUVLLs74eAfYLQv1aMwAjCNg&libraries=places&callback=initMap" async defer></script>
+
+</body>
+</html>
+

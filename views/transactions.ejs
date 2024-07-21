@@ -1,0 +1,85 @@
+<html lang="en" class="bg-gray-200">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Transactions</title>
+</head>
+<body class="">
+    <%- include('../partials/drawer.ejs') %>
+
+    <main>
+        <div id="content" class="!p-0 min-h-screen bg-gray-200">
+            
+            <h1 class="text-2xl text-center py-7">Active Transactions</h1>
+
+            <div id="event-card-wrapper">
+                <% transactions.forEach((transaction, index) => { %>
+                    <div class="event-card" data-land-id="<%= transaction.landId %>">
+                        <p class="hidden first-address"><%= transaction.ownerAddress %></p>
+                        <p class="hidden second-address"><%= transaction.buyerAddress %></p>
+                        <p class="flex items-center">Type: <span><%= transaction.type %></span><i class="inline-block ml-2 h-4 w-4 rounded-full <%= transaction.type == 'Outgoing' ? 'bg-red' : 'bg-green' %>"></i></p>
+                        <p class="<%= transaction.type == "Claim" ? "hidden" : "" %>">Owner Ack Time: <span class="owner-ack-time"><%= transaction.ownerAckTime %></span></p>
+                        <p><%= transaction.type == "Claim" ? "Claimer Ack Time:" : "Buyer Ack Time:" %><span class="buyer-ack-time"><%= transaction.buyerAckTime %></span></p>
+                        <p>Land Name: <span><%= transaction.landName %></span></p>
+                        <p class="<%= transaction.type == "Claim" ? "hidden" : "" %>">Seller:<span class="first-address-resolved">Fetching info...</span></p>
+                        <p><%= transaction.type == "Claim" ? "Claimer:" : "Buyer:" %><span class="second-address-resolved">Fetching info...</span></p>
+                        <p>Digital Address: <span class="digital-address">Fetching info...</span></p>
+                        <p>Coordinates: <span class="coordinates"><%= transaction.landCoordinates %></span></p>
+                        <p class="text-center font-semibold">Click for more details</p>
+                    </div>
+                <% }); %>
+            </div>
+            <% if(transactions.length == 0){ %>
+                <%- include('../partials/no-data.ejs') %>
+            <% } %>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="./js/functions.js"></script>
+    <script src="./js/drawer.js"></script>
+
+    <script>
+        
+        Array.from(document.querySelectorAll('.event-card')).forEach(async (card) => {
+
+            card.style.cursor = 'pointer';
+
+            card.addEventListener('click', e => {
+                window.location.href = `/plot/${card.getAttribute('data-land-id')}`;
+            });
+
+            let ownerAckTimestampSpan = card.querySelector('.owner-ack-time');
+            let buyerAckTimestampSpan = card.querySelector('.buyer-ack-time');
+            let ownerAckTimestamp = ownerAckTimestampSpan.textContent; 
+            let buyerAckTimestamp = buyerAckTimestampSpan.textContent; 
+
+            let ownerAckDate = new Date(ownerAckTimestamp * 1000);
+            let buyerAckDate = new Date(buyerAckTimestamp * 1000);
+
+            ownerAckTimestampSpan.textContent = formatDate(ownerAckDate);
+
+            if(buyerAckTimestamp == '0'){
+                buyerAckTimestampSpan.textContent = 'n/a';
+            }
+
+            else{
+                buyerAckTimestampSpan.textContent = formatDate(buyerAckDate);
+            }
+
+            if(ownerAckTimestamp == '0'){
+                ownerAckTimestampSpan.textContent = 'n/a';
+            }
+
+            else{
+                ownerAckTimestampSpan.textContent = formatDate(ownerAckDate);
+            }
+
+            await fetchAndPopulateLandDetails(card);
+            await fetchAndPopulateUserDetails(card);
+        });
+    </script>
+</body>
+</html>

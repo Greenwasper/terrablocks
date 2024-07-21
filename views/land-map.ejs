@@ -1,0 +1,226 @@
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Land Map</title>
+</head>
+<body>
+    <%- include('../partials/drawer.ejs') %>
+    
+    <main>
+        <div id="content" class="!p-0">
+            <div class="flex justify-between items-center flex-wrap-reverse h-14">
+                <div class="mx-4 w-full">
+                    <input id="search" placeholder="Search..." class="border border-gray-300 rounded-full w-full sm:w-80 outline-none py-2 pl-3 text-base" type="text" name="" id="">
+                </div>
+            </div>
+
+            <div id="search-results" class="fixed z-[100] top-[6.5rem] w-screen bg-white"></div>
+
+            <div id="map" class="h-[calc(100vh-7.5rem)]"></div>
+
+            <div id="colors-key" class="fixed px-5 py-2 flex flex-col bottom-[11rem] left-4 lg:left-[calc(270px+1rem)] bg-white rounded-lg">
+                <div id="key-toggle" class="absolute top-0 left-0 flex w-9 h-9 items-center justify-center cursor-pointer bg-white rounded-lg">
+                    <svg class="w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <h1 class="text-center font-bold text-secondary">Key</h1>
+                <% if(user.role == "admin" || user.role == "superuser"){ %>
+                    <p class=""><span class="bg-red-500"></span>Unverified</p>
+                    <p><span class="bg-yellow-500"></span>Awaiting Verification</p>
+                    <p><span class="bg-green-500"></span>Owned and Verified</p>
+                <% } else if(user.role == "user") { %>
+                    <p class=""><span class="bg-red-500"></span>No-go Area</p>
+                    <p><span class="bg-yellow-500"></span>Awaiting Verification</p>
+                    <p><span class="bg-green-500"></span>Verified Land</p>
+                    <p><span class="bg-blue-500"></span>Your Land</p>
+                <% } %>
+            </div>
+            
+            <div id="current-location-btn" class="fixed flex justify-center items-center bottom-[5.5rem] left-4 lg:left-[calc(270px+1rem)] cursor-pointer w-16 h-16 bg-secondary rounded-full">
+                <ion-icon class="text-white text-3xl z-50" name="location-outline"></ion-icon>
+                <span style="--i:0;"></span>
+                <span style="--i:1;"></span>
+                <span style="--i:2;"></span>
+                <span style="--i:3;"></span>
+            </div>
+
+            <div id="refresher-btn" class="fixed flex justify-center items-center bottom-4 left-4 lg:left-[calc(270px+1rem)] cursor-pointer w-16 h-16 bg-secondary rounded-full">
+                <ion-icon class="text-white text-3xl" name="refresh-outline"></ion-icon>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbX35EomdiUVLLs74eAfYLQv1aMwAjCNg&libraries=places&callback=initMap"></script>
+
+    <script src="./js/functions.js"></script>
+    <script src="./js/drawer.js"></script>
+
+    <script>
+        async function initMap() {
+
+            var geoJsonUrl = "apis/getLands" + "?nocache=" + (new Date()).getTime();
+            var knust = {lat: 6.6760, lng: -1.5614};
+            var initialZoom = 15;
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: initialZoom,
+                center: knust, // KNUST
+                mapTypeId:google.maps.MapTypeId.HYBRID
+            });
+
+            function reloadGeoJson() {
+                features = [];
+                featuresJson = [];
+                map.data.forEach(function (feature) {
+                    map.data.remove(feature);
+                });
+
+                loadGeoJson();
+            }
+
+            var features = [];
+            var featuresJson = [];
+            var marker;
+            var pos;
+
+            var landTbody = document.querySelector('#land-tbody');
+
+            function loadGeoJson () {
+                map.data.loadGeoJson(geoJsonUrl, null, function(f) {
+                    f.forEach(function(feature) {
+                        // let featureCenter = getPolygonCenter(feature, false);
+
+                        features.push(feature);
+
+                        featuresJson.push({
+                            "id": feature.getProperty('id'),
+                            "name": feature.getProperty('name'),
+                            "coordinates": `${feature.getProperty('lat')}, ${feature.getProperty('lng')}`,
+                            "statusColor": feature.getProperty('plotColor')
+                        });
+                
+                    });
+
+                    // console.log(featuresJson);
+                    search(featuresJson);
+                });
+            }
+
+            loadGeoJson();
+
+            map.data.setStyle(function(feature) {
+                return {
+                    fillColor: feature.getProperty('plotColor'),
+                    strokeWeight: 1,
+                    strokeColor: feature.getProperty('strokeColor')
+                };
+            });
+
+            map.data.addListener('click', function(event) {
+                window.location.href = `./plot/${event.feature.getProperty('id')}`;
+            });
+
+            document.querySelector('#current-location-btn').addEventListener('click', e => {
+                if(navigator.geolocation){
+                    document.querySelector('#current-location-btn').classList.toggle('pulsate');
+
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        if (!marker) {
+                            marker = new google.maps.Marker({
+                                position: pos,
+                                map: map,
+                                title: "Last Known Location",
+                                icon: {
+                                    url: 'assets/current-location.png', 
+                                    scaledSize: new google.maps.Size(30, 30) 
+                                }
+                            });
+                        } else {
+                            marker.setPosition(pos);
+                        }
+
+                        var point = {
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [pos.lng, pos.lat]
+                            }
+                        };
+
+                        let pointedFeature;
+
+                        features.forEach(feature => {
+                            var isInside = turf.booleanPointInPolygon(point, featureToObject(feature));
+                            if(isInside){
+                                console.log(feature.getProperty('name'));
+                                pointedFeature = feature;
+                            }
+                        });
+
+                        if(pointedFeature){
+                            var event = {
+                                stop: null,
+                                feature: pointedFeature,
+                            };
+                
+                            google.maps.event.trigger(map.data, 'click', event);
+                        }
+
+                        else{
+                            map.panTo(new google.maps.LatLng(pos.lat, pos.lng));
+                            map.setZoom(17);
+                        }
+
+                        document.querySelector('#current-location-btn').classList.toggle('pulsate');
+
+                    }, function() {
+                        // handleLocationError(true, infoWindow, map.getCenter());
+                    });
+                }
+            });
+
+            var refreshTimerElement = document.querySelector('#refresh-timer');
+
+            function refresherFunction (){
+                // let refreshTimer = parseInt(refreshTimerElement.textContent);
+                // refreshTimer--;
+
+                // if(refreshTimer <= -1){
+                //     hideLandDetails();
+                //     reloadGeoJson();
+                //     refreshTimer = 20;
+                // }
+                
+                // refreshTimerElement.textContent = refreshTimer;
+            }
+
+            var refresher = setInterval(refresherFunction, 1000);
+
+            document.querySelector('#refresher-btn').addEventListener('click', e => {
+                clearInterval(refresher);
+                // hideLandDetails();
+                reloadGeoJson();
+                // refreshTimer = 20;
+                // refreshTimerElement.textContent = refreshTimer;
+                // refresher = setInterval(refresherFunction, 1000);
+            });
+
+            document.querySelector('#key-toggle').addEventListener('click', e => {
+                document.querySelector('#colors-key').classList.toggle('key-expanded');
+            });
+        }
+
+        window.initMap = initMap;
+
+    </script>
+</body>
+</html>

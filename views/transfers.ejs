@@ -1,0 +1,101 @@
+<html lang="en" class="bg-gray-200">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Transactions</title>
+</head>
+<body class="">
+    <%- include('../partials/drawer.ejs') %>
+
+    <main>
+        <div id="content" class="!p-0 min-h-screen bg-gray-200">
+
+            <h1 class="text-2xl text-center py-7">Land Transfer History</h1>
+
+            <div id="event-card-wrapper">
+                <% transfers.forEach((transfer, index) => { %>
+                    <div class="event-card">
+                        <p class="hidden first-address"><%= transfer.from %></p>
+                        <p class="hidden second-address"><%= transfer.to %></p>
+                        <div class="flex justify-between items-center gap-2">
+                            <p class="!mt-0 pr-2">Txn Hash:</p>
+                            <span class="!pl-0 truncate overflow-hidden txn-hash"><%= transfer.transactionHash %></span>
+                            <div class="flex items-center">
+                                <ion-icon name="copy-outline" class="copy-txn-hash cursor-pointer min-w-4"></ion-icon>
+                                <ion-icon name="checkmark-outline" class="copy-txn-hash-check hidden min-w-4"></ion-icon>
+                            </div>
+                        </div>
+
+                        <p class="flex items-center">Type: <span><%= transfer.type %></span><i class="inline-block ml-2 h-4 w-4 rounded-full <%= transfer.type == 'Outgoing' ? 'bg-red' : 'bg-green' %>"></i></p>
+                        <p>Time: <span class="timestamp"><%= transfer.timeAcknowledged %></span></p>
+
+                        <div class="flex items-center gap-2 mt-2">
+                            <p class="!mt-0 pr-2">Land ID:</p>
+                            <span class="!pl-0 truncate overflow-hidden land-id"><%= transfer.landId %></span>
+                            <div class="flex items-center">
+                                <ion-icon name="copy-outline" class="copy-land-id cursor-pointer min-w-4"></ion-icon>
+                                <ion-icon name="checkmark-outline" class="copy-land-id-check hidden min-w-4"></ion-icon>
+                            </div>
+                        </div>
+
+                        <!-- <p>Land ID: <span><%= // transfer.landId %></span></p> -->
+                        <p>Land Name: <span><%= transfer.landName %></span></p>
+                        <p>From: <span class="first-address-resolved">Fetching info...</span></p>
+                        <p>To: <span class="second-address-resolved">Fetching info...</span></p>
+                        <p>Digital Address: <span class="digital-address">Fetching info...</span></p>
+                        <p>Coordinates: <span class="coordinates"><%= `${transfer.coordinates.lat}, ${transfer.coordinates.lng}` %></span></p>
+
+                        <a href="https://sepolia.etherscan.io/tx/<%= transfer.transactionHash %>" target="_blank" class="mt-2 inline-block underline text-blue-400 text-sm">View on Etherscan</a>
+                    </div>
+                <% }); %>
+            </div>
+            <% if(transfers.length == 0){ %>
+                <%- include('../partials/no-data.ejs') %>
+            <% } %>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="./js/functions.js"></script>
+    <script src="./js/drawer.js"></script>
+
+    <script>
+        
+        Array.from(document.querySelectorAll('.event-card')).forEach(async (card) => {
+            card.querySelector('.copy-txn-hash').addEventListener('click', e => {
+                navigator.clipboard.writeText(card.querySelector('.txn-hash').textContent);
+                card.querySelector('.copy-txn-hash-check').classList.toggle('hidden');
+                card.querySelector('.copy-txn-hash').classList.toggle('hidden');
+
+                setTimeout(() => {
+                    card.querySelector('.copy-txn-hash-check').classList.toggle('hidden');
+                    card.querySelector('.copy-txn-hash').classList.toggle('hidden');
+                }, 2000);
+            });
+
+            card.querySelector('.copy-land-id').addEventListener('click', e => {
+                navigator.clipboard.writeText(card.querySelector('.land-id').textContent);
+                card.querySelector('.copy-land-id-check').classList.toggle('hidden');
+                card.querySelector('.copy-land-id').classList.toggle('hidden');
+
+                setTimeout(() => {
+                    card.querySelector('.copy-land-id-check').classList.toggle('hidden');
+                    card.querySelector('.copy-land-id').classList.toggle('hidden');
+                }, 2000);
+            });
+
+            let timestampSpan = card.querySelector('.timestamp');
+            let timestamp = timestampSpan.textContent; 
+
+            let date = new Date(timestamp * 1000);
+
+            timestampSpan.textContent = formatDate(date);
+
+            await fetchAndPopulateLandDetails(card);
+            await fetchAndPopulateUserDetails(card);
+        });
+    </script>
+</body>
+</html>
