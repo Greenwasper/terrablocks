@@ -1,0 +1,32 @@
+{
+  "name": "web3js",
+  "version": "1.0.0",
+  "description": "Node.js tutorial",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "build": "npx tailwindcss -i ./public/css/src.css -o ./public/css/styles.css --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@turf/turf": "^7.0.0",
+    "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
+    "connect-flash": "^0.1.1",
+    "connect-session-sequelize": "^7.1.7",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "request": "^2.88.2",
+    "sqlite3": "^5.1.7",
+    "tailwindcss": "^3.4.4",
+    "web3": "^4.10.0",
+    "web3-validator": "^2.0.6",
+    "wss": "^3.3.4"
+  }
+}

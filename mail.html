@@ -1,0 +1,123 @@
+
+<html>
+<head>
+    <title></title>
+    <style>
+ 
+        
+        /* Additional Styles */
+        body {
+            background-color: #f7fafc;
+            color: #1a202c;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            background-color: #312e81;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .header img {
+            width: 100px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .content {
+            margin-top: 20px;
+            padding: 20px;
+        }
+        
+        .content p {
+            margin-bottom: 20px;
+        }
+        
+        .content a {
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .content a:hover {
+            color: #2c5282;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #718096;
+        }
+
+        .welcome-message {
+            font-size: 18px;
+            color: #2d3748;
+        }
+
+        .important-info {
+            background-color: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            padding: 10px;
+            margin: 20px 0;
+        }
+
+        .contact-info {
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .staff-id-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .staff-id {
+            display: inline-block;
+            background-color: white;
+            color: #312e81;
+            font-size: 25px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px whitesmoke;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg" alt="Ethereum Logo">
+            <p>Welcome to the future of Ethereum</p>
+        </div>
+        
+        <div class="content">
+            <p class="welcome-message">Hi <span class="font-medium">{{ name }}</span>,</p>
+            <p>Click on the link to below to reset your email and password</p>
+            <a href="">Reset your password</a>
+        </div>
+        
+        <div class="footer">
+            <p class="contact-info">© 2024 All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

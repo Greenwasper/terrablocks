@@ -1,0 +1,894 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_buyerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_notes",
+				"type": "string"
+			}
+		],
+		"name": "buyerAck",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "buyerAddress",
+				"type": "address"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currentBuyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address[3]",
+						"name": "acks",
+						"type": "address[3]"
+					},
+					{
+						"internalType": "uint256[3]",
+						"name": "ackTimes",
+						"type": "uint256[3]"
+					},
+					{
+						"internalType": "string[5]",
+						"name": "notes",
+						"type": "string[5]"
+					},
+					{
+						"internalType": "string",
+						"name": "feature",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ownerAckTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "buyerAckTime",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct LandContract.Land",
+				"name": "land",
+				"type": "tuple"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "BuyerAcknowledged",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_claimerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_notes",
+				"type": "string"
+			}
+		],
+		"name": "claimLand",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address[3]",
+				"name": "_layers",
+				"type": "address[3]"
+			}
+		],
+		"name": "initLayers",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "claimerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "landId",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currentBuyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address[3]",
+						"name": "acks",
+						"type": "address[3]"
+					},
+					{
+						"internalType": "uint256[3]",
+						"name": "ackTimes",
+						"type": "uint256[3]"
+					},
+					{
+						"internalType": "string[5]",
+						"name": "notes",
+						"type": "string[5]"
+					},
+					{
+						"internalType": "string",
+						"name": "feature",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ownerAckTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "buyerAckTime",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct LandContract.Land",
+				"name": "land",
+				"type": "tuple"
+			}
+		],
+		"name": "LandClaimed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "registerer",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "landId",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currentBuyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address[3]",
+						"name": "acks",
+						"type": "address[3]"
+					},
+					{
+						"internalType": "uint256[3]",
+						"name": "ackTimes",
+						"type": "uint256[3]"
+					},
+					{
+						"internalType": "string[5]",
+						"name": "notes",
+						"type": "string[5]"
+					},
+					{
+						"internalType": "string",
+						"name": "feature",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ownerAckTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "buyerAckTime",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct LandContract.Land",
+				"name": "land",
+				"type": "tuple"
+			}
+		],
+		"name": "LandRegistered",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "landId",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currentBuyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address[3]",
+						"name": "acks",
+						"type": "address[3]"
+					},
+					{
+						"internalType": "uint256[3]",
+						"name": "ackTimes",
+						"type": "uint256[3]"
+					},
+					{
+						"internalType": "string[5]",
+						"name": "notes",
+						"type": "string[5]"
+					},
+					{
+						"internalType": "string",
+						"name": "feature",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ownerAckTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "buyerAckTime",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct LandContract.Land",
+				"name": "land",
+				"type": "tuple"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "LandTransferred",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_layerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_acknowledgerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_notes",
+				"type": "string"
+			}
+		],
+		"name": "layerAck",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "layerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "acknowledgerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "landId",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currentBuyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address[3]",
+						"name": "acks",
+						"type": "address[3]"
+					},
+					{
+						"internalType": "uint256[3]",
+						"name": "ackTimes",
+						"type": "uint256[3]"
+					},
+					{
+						"internalType": "string[5]",
+						"name": "notes",
+						"type": "string[5]"
+					},
+					{
+						"internalType": "string",
+						"name": "feature",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ownerAckTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "buyerAckTime",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct LandContract.Land",
+				"name": "land",
+				"type": "tuple"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "LayerAcknowledged",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_ownerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_feature",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_registerer",
+				"type": "address"
+			}
+		],
+		"name": "registerLand",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_sellerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_buyerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_notes",
+				"type": "string"
+			}
+		],
+		"name": "sellerAck",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "ownerAddress",
+				"type": "address"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currentBuyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address[3]",
+						"name": "acks",
+						"type": "address[3]"
+					},
+					{
+						"internalType": "uint256[3]",
+						"name": "ackTimes",
+						"type": "uint256[3]"
+					},
+					{
+						"internalType": "string[5]",
+						"name": "notes",
+						"type": "string[5]"
+					},
+					{
+						"internalType": "string",
+						"name": "feature",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ownerAckTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "buyerAckTime",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct LandContract.Land",
+				"name": "land",
+				"type": "tuple"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "SellerAcknowledged",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address[3]",
+				"name": "addressArray",
+				"type": "address[3]"
+			}
+		],
+		"name": "containsZeroAddress",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllLands",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "currentBuyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "address[3]",
+						"name": "acks",
+						"type": "address[3]"
+					},
+					{
+						"internalType": "uint256[3]",
+						"name": "ackTimes",
+						"type": "uint256[3]"
+					},
+					{
+						"internalType": "string[5]",
+						"name": "notes",
+						"type": "string[5]"
+					},
+					{
+						"internalType": "string",
+						"name": "feature",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ownerAckTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "buyerAckTime",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct LandContract.Land[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getLayerAddresses",
+		"outputs": [
+			{
+				"internalType": "address[3]",
+				"name": "",
+				"type": "address[3]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "layersInitialized",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "msgSender",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
