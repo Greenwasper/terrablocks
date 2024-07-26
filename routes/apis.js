@@ -46,6 +46,55 @@ router.get('/getLands', async (req, res) => {
     res.json('Unauthorized request');
 });
 
+router.get('/get-land-stats', async (req, res) => {
+
+    if(req.session.user){
+
+        const lands = await blockchain.getAllLands();
+        const layerAckHistory = await blockchain.getPastEvents("LayerAcknowledged", {layerAddress: req.session.user.superuser_affiliation});
+        const registeredLandHistory = await blockchain.getPastEvents("LandRegistered", {registerer: req.session.user.eth_address});
+        let transactionsCount = 0;
+        if(req.session.user.role == 'admin' || req.session.user.role == 'superuser'){
+            const layerAddresses = await blockchain.getLayerAddresses();
+            let address = req.session.user.role == 'admin' ? req.session.user.eth_address : req.session.user.superuser_affiliation;
+            let layer = layerAddresses.indexOf(address);
+
+            lands.forEach(land => {
+                if(land.owner != blockchain.address0 && land.buyer != blockchain.address0){
+                    let enableTransactionPush = false;
+
+                    if(layer == 0){
+                        enableTransactionPush = true;
+                    }
+
+                    else if(land.acks[layer-1] != blockchain.address0){
+                        // checking if previous layer has acknowledged
+                        enableTransactionPush = true;
+                    }
+
+                    if(land.acks[layer] == layerAddresses[layer]){
+                        // Already acknowledged
+                        enableTransactionPush = false;
+                    }
+
+                    if(enableTransactionPush){
+                        transactionsCount++;
+                    }
+                }
+            });
+        }
+
+        return res.json({
+            landsCount: lands.length,
+            pendingTransactionsCount: transactionsCount,
+            totalVerifications: layerAckHistory.length,
+            landsRegistered: registeredLandHistory.length
+        });
+    }
+
+    res.json('Unauthorized request');
+});
+
 router.get('/getBlockchainLands', async (req, res) => {
     const rawLands = await blockchain.getAllLands();
 
@@ -116,7 +165,7 @@ router.post('/get-owner-details', async (req, res) => {
 
     if(req.session.user){
 
-        const sql = `SELECT phone, first_name, last_name, other_names, email, ghana_card, superuser_affiliation, time_created, enabled FROM users WHERE eth_address=${db.escape(req.body.eth_address)}`;
+        const sql = `SELECT phone, role, party, first_name, last_name, other_names, email, ghana_card, superuser_affiliation, time_created, enabled FROM users WHERE eth_address=${db.escape(req.body.eth_address)}`;
 
         try{
             const landOwner = await query(sql);

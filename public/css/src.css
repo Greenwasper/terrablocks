@@ -338,15 +338,15 @@ table.sortable tbody tr td.sortable-index::before {
 /* Index */
 
 #admin-actions-container > a{
-    @apply h-48 bg-white fill-secondary shadow-md rounded-lg flex flex-col justify-center items-center cursor-pointer hover:bg-secondary hover:text-white hover:fill-white transition-all duration-300;
+    @apply py-6 bg-white fill-secondary rounded-lg flex justify-center items-center gap-3 border cursor-pointer shadow-md hover:shadow-xl transition-all duration-300;
 }
 
 #admin-actions-container svg{
-    @apply fill-inherit w-14;
+    @apply stroke-2 w-6;
 }
 
 #admin-actions-container h1{
-    @apply text-xl mt-5;
+    @apply text-base;
 }
 
 .dashboard-tile{

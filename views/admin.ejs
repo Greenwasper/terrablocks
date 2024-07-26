@@ -14,44 +14,44 @@
                     <h1 class="mt-10 text-2xl">Welcome, <%= user.name %></h1>
                 </div>
 
-                <div class="hidden grid-cols-3 gap-5">
-                    <div class="bg-white rounded-lg col-span-2 p-8">
-                        <h1>Land Statistics</h1>
+                <div id="admin-actions-container" class="py-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="/land-map" class="border-blue-400">
+                        <div class="h-12 w-12 rounded-full bg-blue-400 flex justify-center items-center">
+                            <svg class="stroke-blue-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                        </div>
+                        <h1 class="text-blue-700">View Map</h1>
+                    </a>
+
+                    <% if(user.role == 'admin'){ %>
+
+                    <a href="/superusers" class="border-green-400">
+                        <div class="h-12 w-12 rounded-full bg-green-400 flex justify-center items-center">
+                            <svg class="stroke-green-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h1 class="text-green-700">Manage Superusers</h1>
+                    </a>
+
+                    <% } %>
+                    <a href="/register-land" class="border-indigo-400">
+                        <div class="h-12 w-12 rounded-full bg-indigo-400 flex justify-center items-center">
+                            <svg class="stroke-indigo-700" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                        </div>
+                        <h1 class="text-secondary">Register Land</h1>
+                    </a>
+                </div>
+
+                <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="bg-white rounded-lg col-span-1 px-16 py-7">
+                        <h1 class="mb-3 text-gray-500 text-base">Land Statistics</h1>
                         <canvas id="myChart"></canvas>
                     </div>
 
+                    <div class="bg-white rounded-lg col-span-1 px-16 py-7">
+                        <h1 class="mb-3 text-gray-500 text-base">Activity</h1>
+                        <canvas id="myChart2"></canvas>
+                    </div>
+
                     <div class="col-span-1 bg-white rounded-lg"></div>
-                </div>
-
-                
-
-                <div id="admin-actions-container" class="mt-7 grid grid-cols-3 gap-4">
-                    <a href="/land-map" class="">
-                        <svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 20h18a1 1 0 0 0 .864-1.504l-7-12c-.359-.615-1.369-.613-1.729 0L9.866 12.1l-1.02-1.632A.998.998 0 0 0 8 10h-.001a1 1 0 0 0-.847.47l-5 8A1 1 0 0 0 3 20zM14 8.985 19.259 18h-5.704l-2.486-3.987L14 8.985zm-5.999 3.9L11.197 18H4.805l3.196-5.115zM6 8c1.654 0 3-1.346 3-3S7.654 2 6 2 3 3.346 3 5s1.346 3 3 3zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path></svg>
-                        <h1 class="">View Map</h1>
-                    </a>
-
-                    <% if(user.role == 'admin'){ %>
-
-                    <a href="/superusers" class="">
-                        <svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 20h18a1 1 0 0 0 .864-1.504l-7-12c-.359-.615-1.369-.613-1.729 0L9.866 12.1l-1.02-1.632A.998.998 0 0 0 8 10h-.001a1 1 0 0 0-.847.47l-5 8A1 1 0 0 0 3 20zM14 8.985 19.259 18h-5.704l-2.486-3.987L14 8.985zm-5.999 3.9L11.197 18H4.805l3.196-5.115zM6 8c1.654 0 3-1.346 3-3S7.654 2 6 2 3 3.346 3 5s1.346 3 3 3zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path></svg>
-                        <h1 class="">Manage Superusers</h1>
-                    </a>
-
-                    <% } %>
-                    <a href="/register-land" class="">
-                        <svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 20h18a1 1 0 0 0 .864-1.504l-7-12c-.359-.615-1.369-.613-1.729 0L9.866 12.1l-1.02-1.632A.998.998 0 0 0 8 10h-.001a1 1 0 0 0-.847.47l-5 8A1 1 0 0 0 3 20zM14 8.985 19.259 18h-5.704l-2.486-3.987L14 8.985zm-5.999 3.9L11.197 18H4.805l3.196-5.115zM6 8c1.654 0 3-1.346 3-3S7.654 2 6 2 3 3.346 3 5s1.346 3 3 3zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path></svg>
-                        <h1 class="">Register Land</h1>
-                    </a>
-
-                    <% if(user.role == 'admin'){ %>
-
-                    <!-- <a href="/" class="">
-                        <svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 20h18a1 1 0 0 0 .864-1.504l-7-12c-.359-.615-1.369-.613-1.729 0L9.866 12.1l-1.02-1.632A.998.998 0 0 0 8 10h-.001a1 1 0 0 0-.847.47l-5 8A1 1 0 0 0 3 20zM14 8.985 19.259 18h-5.704l-2.486-3.987L14 8.985zm-5.999 3.9L11.197 18H4.805l3.196-5.115zM6 8c1.654 0 3-1.346 3-3S7.654 2 6 2 3 3.346 3 5s1.346 3 3 3zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path></svg>
-                        <h1 class="">Verify Unowned Land</h1>
-                    </a> -->
-
-                    <% } %>
                 </div>
 
 
@@ -69,26 +69,105 @@
 
     <script>
         const ctx = document.getElementById('myChart');
+        const ctx2 = document.getElementById('myChart2');   
 
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Verified', 'Awaiting Verification', 'Unverified'],
-                datasets: [{
-                    label: '# of Lands',
-                    data: [12, 19, 3],
-                    backgroundColor: [
-                        green,
-                        yellow,
-                        red
-                    ],
-                    borderWidth: 1
-                }]
+        $.ajax({
+            type: 'get',
+            url: '/apis/getLands',
+            error: (xhr, status, error) => {
+                console.log(xhr.statusText);
             },
-            options: {
-               
+            success: function(res){
+                // console.log(res.features);
+
+                let noUnverified = 0;
+                let noPending = 0;
+                let noVerified = 0;
+
+                res.features.forEach(feature => {
+                    switch(feature.properties.plotColor){
+                        case red: noUnverified++; break;
+                        case yellow: noPending++; break;
+                        case green: noVerified++; break;
+                    }
+                });
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Verified', 'Awaiting Verification', 'Unverified'],
+                        datasets: [{
+                            label: '# of Lands',
+                            data: [noVerified, noPending, noUnverified],
+                            backgroundColor: [
+                                '#4ade80',
+                                '#ffcd56',
+                                '#f87171'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        }
+                    }
+                });
             }
         });
+
+        $.ajax({
+            type: 'get',
+            url: '/apis/get-land-stats',
+            error: (xhr, status, error) => {
+                console.log(xhr.statusText);
+            },
+            success: function(res){
+                // console.log(res);
+
+                new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ['No. of Lands', 'Pending Transactions', 'Total Verifications', 'Lands Registered'],
+                        datasets: [{
+                            data: [res.landsCount, res.pendingTransactionCount, res.totalVerifications, res.landsRegistered],
+                            backgroundColor: [
+                                '#60a5fa',
+                                '#f87171',
+                                '#ffcd56',
+                                '#4ade80',
+                            ],
+                            borderColor: [
+                                '#60a5fa',
+                                '#f87171',
+                                '#ffcd56',
+                                '#4ade80',
+                            ],
+                            borderWidth: 1,
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        aspectRatio: 1,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    },
+                });  
+            }
+        });
+
+
+           
     </script>
 </body>
 </html>
