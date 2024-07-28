@@ -251,6 +251,13 @@ function convertBearing(bearing) {
     return bearing;
 }
 
+const tooltipOptions = {
+    backgroundColor: 'white',
+    titleColor: 'black',
+    bodyColor: 'black',
+    padding: 8
+};
+
 document.onreadystatechange = function () {
     var state = document.readyState;
     if (state == 'complete') {

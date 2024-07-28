@@ -26,9 +26,11 @@ router.get('/', async (req, res) => {
         allTransfers.forEach(transfer => {
 
             let type = '';
+            let typeColor = '';
 
             if(req.session.user.role == 'user'){
                 type = req.session.user.eth_address == transfer.returnValues.from ? 'Outgoing' : 'Incoming';
+                typeColor = req.session.user.eth_address == transfer.returnValues.from ? '#f87171' : '#4ade80';
             }
 
             else if(req.session.user.role == 'admin' || req.session.user.role == 'superuser'){
@@ -37,6 +39,7 @@ router.get('/', async (req, res) => {
 
             transfers.push({
                 type,
+                typeColor,
                 transactionHash: transfer.transactionHash,
                 timeAcknowledged: transfer.returnValues.timestamp,
                 landName: customFunctions.ucwords(transfer.returnValues.land.name),

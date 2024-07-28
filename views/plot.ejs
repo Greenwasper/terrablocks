@@ -20,14 +20,15 @@
             <% if(buttonEnablers.showValidationStatus){ %>
                 <div class="dashboard-tile">
                     <h1 class="">Validation Status</h1>
-                    <div class="mt-4 grid grid-cols-4 gap-3">
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3">
                         <% Object.entries(acks).forEach(([key, value]) => { %>
-                            <div>
-                                <div class="h-2 rounded-md <%= value ? 'background-secondary' : 'background-gray' %>"></div>
-                                <div class="mt-3 flex items-center gap-2">
+                            <div class="">
+                                <div class="hidden md:block h-2 rounded-md <%= value ? 'background-secondary' : 'background-gray' %>"></div>
+                                <div class="mt-3 md:mt-0 flex items-center gap-2 h-full">
+                                    <div class="block md:hidden h-full w-2 rounded-md mr-1 <%= value ? 'background-secondary' : 'background-gray' %>"></div>
+                                    <p class="inline-block"><%= key %> Validated</p>
                                     <ion-icon class="text-xl text-red-500 <%= value ? 'hidden' : '' %>" name="close-circle-outline"></ion-icon>
                                     <ion-icon class="text-xl text-green-500 <%= value ? '' : 'hidden' %>" name="checkmark-circle-outline"></ion-icon>
-                                    <p class="inline-block"><%= key %> Validated</p>
                                 </div>
                             </div>
                         <% }) %>

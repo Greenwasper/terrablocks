@@ -22,36 +22,54 @@
 
                 <div class="dashboard-tile">
                     <h1 class="">Profile Status</h1>
-                    <div class="mt-4 grid grid-cols-3 gap-3">
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <% Object.entries(verification).forEach(([key, value]) => { %>
-                            <div>
-                                <div class="h-2 rounded-md <%= value ? 'background-secondary' : 'background-gray' %>"></div>
-                                <div class="mt-3 flex items-center gap-2">
+                            <div class="">
+                                <div class="hidden sm:block h-2 rounded-md <%= value ? 'background-secondary' : 'background-gray' %>"></div>
+                                <div class="mt-2 sm:mt-3 flex items-center gap-2 h-full">
+                                    <div class="block sm:hidden h-full w-2 rounded-md mr-1 <%= value ? 'background-secondary' : 'background-gray' %>"></div>
+                                    <p class="inline-block"><%= key %> Verified</p>
                                     <ion-icon class="text-xl text-red-500 <%= value ? 'hidden' : '' %>" name="close-circle-outline"></ion-icon>
                                     <ion-icon class="text-xl text-green-500 <%= value ? '' : 'hidden' %>" name="checkmark-circle-outline"></ion-icon>
-                                    <p class="inline-block"><%= key %> Verified</p>
                                 </div>
                             </div>
                         <% }) %>
                     </div>
                 </div>
 
-                <div class="dashboard-tile">
-                    <h1>Your Lands</h1>
-                    <p class="mt-4">You have <span class="text-2xl font-bold"><%= ownedLands %></span> verified and owned land(s)</p>
-                    <div class="mt-5 flex gap-4">
-                        <a href="/land-map" class="btn btn-secondary">View All Lands</a>
-                        <!-- <button class="btn btn-outline-secondary">View Transactions</button> -->
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="bg-white rounded-lg col-span-1 px-16 py-7 shadow-md">
+                        <h1 class="mb-3 text-gray-500 text-base">Land Statistics</h1>
+                        <canvas id="myChart"></canvas>
                     </div>
+
+                    <div class="bg-white rounded-lg col-span-1 px-16 py-7 shadow-md">
+                        <h1 class="mb-3 text-gray-500 text-base">Activity</h1>
+                        <canvas id="myChart2"></canvas>
+                    </div>                    
                 </div>
 
-                <div class="dashboard-tile">
-                    <h1>Current Transactions</h1>
-                    <p class="mt-4">You have <span class="text-2xl font-bold"><%= transactions %></span> active transaction(s)</p>
-                    <div class="mt-5 flex gap-4">
-                        <!-- <a href="/land-map" class="btn btn-secondary">Create Transaction</a> -->
-                        <a href="/transactions" class="btn btn-secondary">View Transactions</a>
-                    </div>
+                <div id="actions-container" class="py-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="/land-map" class="border-blue-500">
+                        <div class="h-12 w-12 rounded-full bg-blue-400 flex justify-center items-center">
+                            <svg class="stroke-blue-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                        </div>
+                        <h1 class="text-blue-700">View Map</h1>
+                    </a>
+
+                    <a href="/transactions" class="border-red-500">
+                        <div class="h-12 w-12 rounded-full bg-red-400 flex justify-center items-center">
+                            <svg class="stroke-red-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h1 class="text-red-700">View Active Transactions</h1>
+                    </a>
+
+                    <a href="/ack-history" class="border-indigo-500">
+                        <div class="h-12 w-12 rounded-full bg-indigo-400 flex justify-center items-center">
+                            <svg class="stroke-indigo-700" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                        </div>
+                        <h1 class="text-secondary">View Actions</h1>
+                    </a>
                 </div>
             </div>
         </div>
@@ -60,6 +78,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="./js/functions.js"></script>
     <script src="./js/drawer.js"></script>
@@ -75,6 +94,115 @@
                 document.querySelector('#copy-eth-address').classList.toggle('hidden');
             }, 2000);
         });
+
+        const ctx = document.getElementById('myChart');
+        const ctx2 = document.getElementById('myChart2');
+
+        $.ajax({
+            type: 'get',
+            url: '/apis/getLands',
+            error: (xhr, status, error) => {
+                console.log(xhr.statusText);
+            },
+            success: function(res){
+                // console.log(res.features);
+
+                let noOwned = 0;
+                let noUnverified = 0;
+                let noPending = 0;
+                let noVerified = 0;
+
+                res.features.forEach(feature => {
+                    switch(feature.properties.plotColor){
+                        case blue: noOwned++; break;
+                        case red: noUnverified++; break;
+                        case yellow: noPending++; break;
+                        case green: noVerified++; break;
+                    }
+                });
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Your Land', 'Verified Land', 'Awaiting Verification', 'Unclaimed'],
+                        datasets: [{
+                            label: '# of Lands',
+                            data: [noOwned, noVerified, noPending, noUnverified],
+                            backgroundColor: [
+                                '#60a5fa',
+                                '#4ade80',
+                                '#ffcd56',
+                                '#f87171'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            tooltip: tooltipOptions
+                        }
+                    }
+                });
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: '/apis/get-land-stats',
+            error: (xhr, status, error) => {
+                console.log(xhr.statusText);
+            },
+            success: function(res){
+                // console.log(res);
+
+                new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Active Transactions', 'Total Lands Claimed', 'Total Buyer Acks', 'Total Seller Acks'],
+                        datasets: [{
+                            data: [res.pendingTransactionsCount, res.totalLandClaims, res.totalBuyerAcks, res.totalSellerAcks],
+                            // data: [2,5,4,3],
+                            backgroundColor: [
+                                '#f87171', // red
+                                '#60a5fa', // blue
+                                '#4ade80', // green
+                                '#ffcd56', // yellow
+                            ],
+                            borderColor: [
+                                '#f87171',
+                                '#60a5fa',
+                                '#4ade80',
+                                '#ffcd56',
+                                // #c084fc purple
+                            ],
+                            borderWidth: 1,
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        aspectRatio: 1,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            tooltip: tooltipOptions,
+                            decimation: {
+                                enable: false
+                            },
+                            legend: {
+                                display: false
+                            }
+                        }
+                    },
+                });  
+            }
+        });
+
     </script>
 </body>
 </html>

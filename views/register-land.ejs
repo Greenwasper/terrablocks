@@ -209,20 +209,20 @@
                 mapTypeId:google.maps.MapTypeId.HYBRID,
             });
 
-            // if(document.querySelectorAll('#previousCoords span').length != 0){
+            if(document.querySelectorAll('#previousCoords span').length != 0){
 
-            //     Array.from(document.querySelectorAll('#previousCoords span')).forEach(coord => {
-            //         points.push({lat: parseFloat(coord.textContent.split(',')[1]), lng: parseFloat(coord.textContent.split(',')[0])});
-            //     });
+                // Array.from(document.querySelectorAll('#previousCoords span')).forEach(coord => {
+                //     points.push({lat: parseFloat(coord.textContent.split(',')[1]), lng: parseFloat(coord.textContent.split(',')[0])});
+                // });
 
-            //     points.pop();
+                // points.pop();
 
-            //     createFeature();
+                // createFeature();
 
-            //     document.querySelector('#land-title').value = document.querySelector('#previousTitle').textContent;
+                // document.querySelector('#land-title').value = document.querySelector('#previousTitle').textContent;
 
-            //     toastRed(document.querySelector("#errorMessage").textContent);
-            // }
+                toastRed(document.querySelector("#errorMessage").textContent);
+            }
 
             function clearAllPoints() {
 

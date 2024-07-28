@@ -15,6 +15,7 @@ router.get('/', (req, res) => {
 router.post('/register', async (req, res) => {
     if(req.session.user){
         if(req.session.user.role == "admin" || req.session.user.role == "superuser"){
+            const layerAddress = req.session.user.role == 'admin' ? req.session.user.eth_address : req.session.user.superuser_affiliation;
 
             const previousCoords = JSON.parse(req.body.feature).geometry.coordinates[0];
 
@@ -24,7 +25,7 @@ router.post('/register', async (req, res) => {
                 return res.render('register-land', {title: 'Register Land', registerError: true, errorMessage: "Invalid Password", user: req.session.user, previous: {previousCoords, previousTitle: req.body.land_name, previousAddress: req.body.eth_address}});
             }
 
-            const timestamp = Math.floor(Date.now() / 1000);
+            // const timestamp = Math.floor(Date.now() / 1000);
             const uid = crypto.randomUUID();
 
             // await query(`INSERT INTO queue (type, landId, eth_address, status, timestamp) VALUES ('insertLand', ${db.escape(uid)}, ${db.escape(req.session.user.eth_address)}, 'Pending', '${timestamp}')`);
@@ -40,6 +41,7 @@ router.post('/register', async (req, res) => {
                     landId: uid,
                     name: req.body.land_name,
                     feature: req.body.feature,
+                    layerAddress,
                     registerer: req.session.user.eth_address
                 });
     

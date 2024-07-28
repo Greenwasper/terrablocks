@@ -13,9 +13,11 @@ router.get('/:landId', async (req, res) => {
         landHistory.forEach(transfer => {
             transfers.push({
                 type: transfer.returnValues.from == blockchain.address0 ? 'Claim' : 'Transfer',
+                typeColor: transfer.returnValues.from == blockchain.address0 ? '#60a5fa' : '#4ade80',
                 transactionHash: transfer.transactionHash,
                 timeAcknowledged: transfer.returnValues.timestamp,
                 landName: customFunctions.ucwords(transfer.returnValues.land.name),
+                landId: transfer.returnValues.land.id,
                 from: transfer.returnValues.from,
                 to: transfer.returnValues.to,
                 coordinates: customFunctions.getCoordinates(JSON.parse(transfer.returnValues.land.feature))

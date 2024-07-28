@@ -25,7 +25,7 @@
                             </div>
                         </div>
 
-                        <p class="flex items-center">Type: <span><%= transfer.type %></span><i class="inline-block ml-2 h-4 w-4 rounded-full <%= transfer.type == 'Outgoing' ? 'bg-red' : 'bg-green' %>"></i></p>
+                        <p class="flex items-center">Type: <span><%= transfer.type %></span><i class="inline-block ml-2 h-4 w-4 rounded-full" <%- `style='background: ${transfer.typeColor}'` %>></i></p>
                         <p>Time: <span class="timestamp"><%= transfer.timeAcknowledged %></span></p>
 
                         <div class="flex items-center gap-2 mt-2">

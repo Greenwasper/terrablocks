@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
 
         captchaRes = JSON.parse(captchaRes);
 
-        console.log(captchaRes.success);
+        // console.log(captchaRes.success);
 
         if(!captchaRes.success){
             return res.render('register', {data: req.body, error: "Could not validate captcha"});
@@ -80,7 +80,7 @@ router.post('/', async (req, res) => {
         
                 sql += ` WHERE code=${db.escape(code)}`;
 
-                console.log(sql);
+                // console.log(sql);
 
                 await query(sql);
 
@@ -114,7 +114,7 @@ router.post('/', async (req, res) => {
 
     sql += ")";
 
-    console.log(sql);
+    // console.log(sql);
 
     try {
         await query(sql);

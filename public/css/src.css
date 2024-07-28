@@ -337,15 +337,15 @@ table.sortable tbody tr td.sortable-index::before {
 
 /* Index */
 
-#admin-actions-container > a{
+#actions-container > a{
     @apply py-6 bg-white fill-secondary rounded-lg flex justify-center items-center gap-3 border cursor-pointer shadow-md hover:shadow-xl transition-all duration-300;
 }
 
-#admin-actions-container svg{
+#actions-container svg{
     @apply stroke-2 w-6;
 }
 
-#admin-actions-container h1{
+#actions-container h1{
     @apply text-base;
 }
 

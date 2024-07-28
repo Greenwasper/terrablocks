@@ -16,7 +16,7 @@
                     <div class="event-card" data-land-id="<%= transaction.landId %>">
                         <p class="hidden first-address"><%= transaction.ownerAddress %></p>
                         <p class="hidden second-address"><%= transaction.buyerAddress %></p>
-                        <p class="flex items-center">Type: <span><%= transaction.type %></span><i class="inline-block ml-2 h-4 w-4 rounded-full <%= transaction.type == 'Outgoing' ? 'bg-red' : 'bg-green' %>"></i></p>
+                        <p class="flex items-center">Type: <span><%= transaction.type %></span><i class="inline-block ml-2 h-4 w-4 rounded-full" <%- `style='background: ${transaction.typeColor}'` %>></i></p>
                         <p class="<%= transaction.type == "Claim" ? "hidden" : "" %>">Owner Ack Time: <span class="owner-ack-time"><%= transaction.ownerAckTime %></span></p>
                         <p><%= transaction.type == "Claim" ? "Claimer Ack Time:" : "Buyer Ack Time:" %><span class="buyer-ack-time"><%= transaction.buyerAckTime %></span></p>
                         <p>Land Name: <span><%= transaction.landName %></span></p>

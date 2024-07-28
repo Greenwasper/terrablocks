@@ -4,7 +4,7 @@ pragma solidity >=0.8.2 <0.9.0;
 
 contract LandContract {
 
-    event LandRegistered(address indexed registerer, string indexed landId, uint256 timestamp, Land land);
+    event LandRegistered(address indexed layerAddress, address indexed registerer, string indexed landId, uint256 timestamp, Land land);
     event LandClaimed(address indexed claimerAddress, string indexed landId, uint256 timestamp, Land land);
     event SellerAcknowledged(address indexed ownerAddress, Land land, uint256 timestamp);
     event BuyerAcknowledged(address indexed buyerAddress, Land land, uint256 timestamp);
@@ -69,6 +69,7 @@ contract LandContract {
         string memory _landId,
         string memory _name,
         string memory _feature,
+        address _layerAddress,
         address _registerer
     ) public {
         Land memory newLand = Land({
@@ -89,7 +90,7 @@ contract LandContract {
 
         lands.push(newLand);
 
-        emit LandRegistered(_registerer, _landId, block.timestamp, newLand);
+        emit LandRegistered(_layerAddress, _registerer, _landId, block.timestamp, newLand);
     }
 
     function getAllLands() public view returns (Land[] memory) {

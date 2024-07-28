@@ -1,28 +1,5 @@
 [
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_buyerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_landId",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_notes",
-				"type": "string"
-			}
-		],
-		"name": "buyerAck",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -118,42 +95,6 @@
 		],
 		"name": "BuyerAcknowledged",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_claimerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_landId",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_notes",
-				"type": "string"
-			}
-		],
-		"name": "claimLand",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address[3]",
-				"name": "_layers",
-				"type": "address[3]"
-			}
-		],
-		"name": "initLayers",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -256,6 +197,12 @@
 	{
 		"anonymous": false,
 		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "layerAddress",
+				"type": "address"
+			},
 			{
 				"indexed": true,
 				"internalType": "address",
@@ -456,34 +403,6 @@
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_layerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_acknowledgerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_landId",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_notes",
-				"type": "string"
-			}
-		],
-		"name": "layerAck",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -588,67 +507,6 @@
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_ownerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_landId",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_feature",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "_registerer",
-				"type": "address"
-			}
-		],
-		"name": "registerLand",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_sellerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_buyerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_landId",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_notes",
-				"type": "string"
-			}
-		],
-		"name": "sellerAck",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -739,6 +597,52 @@
 		],
 		"name": "SellerAcknowledged",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_buyerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_notes",
+				"type": "string"
+			}
+		],
+		"name": "buyerAck",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_claimerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_notes",
+				"type": "string"
+			}
+		],
+		"name": "claimLand",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
@@ -853,6 +757,47 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address[3]",
+				"name": "_layers",
+				"type": "address[3]"
+			}
+		],
+		"name": "initLayers",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_layerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_acknowledgerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_notes",
+				"type": "string"
+			}
+		],
+		"name": "layerAck",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "layersInitialized",
 		"outputs": [
@@ -889,6 +834,72 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_ownerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_feature",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_layerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_registerer",
+				"type": "address"
+			}
+		],
+		"name": "registerLand",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_sellerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_buyerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_landId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_notes",
+				"type": "string"
+			}
+		],
+		"name": "sellerAck",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

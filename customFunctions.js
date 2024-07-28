@@ -216,12 +216,12 @@ async function getLandColors (user, land) {
             buttonEnablers.acknowledgeTransfer = true;
             buttonEnablers.showOwnerDetails = true;
             buttonEnablers.showValidationStatus = true;
-            buttonEnablers.ackComplete = true;
             buttonEnablers.notes = land.notes[4];
     
             if(land.buyer == user.eth_address){
                 // What buyer will see if Acknowledged By Buyer
     
+                buttonEnablers.ackComplete = true;
                 buttonEnablers.acknowledgeTransfer = false;
                 statusText = "Awaiting Government Verification";
             }
@@ -234,6 +234,7 @@ async function getLandColors (user, land) {
                 statusColor = red;
                 statusText = "No-go Area";
     
+                buttonEnablers.ackComplete = false;
                 buttonEnablers.acknowledgeTransfer = false;
                 buttonEnablers.showOwnerDetails = false;
                 buttonEnablers.showValidationStatus = false;
@@ -363,7 +364,7 @@ async function getLand (landId, user){
             feature = JSON.parse(rawLands[i].feature);
 
             ownerAddress = rawLands[i].currentOwner;
-            buyerAddress = rawLands[i].currentBuyer;
+            buyerAddress = rawLands[i].buyer;
             validations = rawLands[i].acks;
 
             const centerCoords = getCoordinates(feature);

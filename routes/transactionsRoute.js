@@ -24,21 +24,25 @@ router.get('/', async (req, res) => {
                             // This is a land claim
 
                             type = 'Claim';
+                            typeColor = '#60a5fa'; // secondary
                             ownerAddress = blockchain.address0;
                         }
 
                         else if(req.session.user.eth_address == land.owner){
                             type = 'Outgoing';
+                            typeColor = '#f87171'; // red
                             ownerAddress = land.owner;
                         }
 
                         else{
                             type = 'Incoming';
+                            typeColor = '#4ade80'; // green
                             ownerAddress = land.owner;
                         }
     
                         transactions.push({
                             type,
+                            typeColor,
                             landId: land.id,
                             landName: customFunctions.ucwords(land.name),
                             ownerAddress,
@@ -78,6 +82,7 @@ router.get('/', async (req, res) => {
                             const landCoordinates = customFunctions.getCoordinates(JSON.parse(land.feature));
                             transactions.push({
                                 type: land.owner == land.currentBuyer ? "Claim" : "Transfer",
+                                typeColor: land.owner == land.currentBuyer ? "#60a5fa" : "#ffcd56",
                                 landId: land.id,
                                 landName: customFunctions.ucwords(land.name),
                                 ownerAddress: land.owner == land.currentBuyer ? blockchain.address0 : land.owner,
