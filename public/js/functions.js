@@ -193,7 +193,12 @@ async function fetchAndPopulateUserDetails (card, isSecondAddress = true) {
         });
     }
 
-    card.querySelector('.first-address-resolved').textContent = firstAddressDetails.name;
+
+    if(firstAddressDetails.name == 'User not found'){
+        card.querySelector('.first-address-resolved').textContent = 'Unclaimed';
+    } else {
+        card.querySelector('.first-address-resolved').textContent = firstAddressDetails.name;
+    }
 
     if(isSecondAddress){
         try{
@@ -249,6 +254,21 @@ function convertBearing(bearing) {
     }
 
     return bearing;
+}
+
+function metersToKilometers(meters) {
+    const metersInKilometer = 1000; // There are 1000 meters in a kilometer
+    return meters / metersInKilometer;
+}
+
+function yardsToKilometers(yards) {
+    const yardsInKilometer = 1093.61; // There are approximately 1093.61 yards in a kilometer
+    return yards / yardsInKilometer;
+}
+
+function feetToKilometers(feet) {
+    const feetInKilometer = 3280.84; // There are approximately 3280.84 feet in a kilometer
+    return feet / feetInKilometer;
 }
 
 const tooltipOptions = {

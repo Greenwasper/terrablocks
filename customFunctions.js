@@ -1,6 +1,7 @@
 const turf = require('@turf/turf');
 var request = require('request');
 const blockchain = require('./blockchain');
+const axios = require('axios');
 
 const green = '#1fd655';
 const red = '#e51c23';
@@ -25,6 +26,42 @@ function formatNumber(number) {
 
 
     return formattedNumber;
+}
+
+async function sendSms (message, phone) {
+    const response = await axios({
+        method: 'post',
+        url: 'https://sms.arkesel.com/api/v2/sms/send',     
+        headers: {
+            'api-key': 'OjVaRldWbWlIa3dWMzEwVjY='
+        },
+        data:{
+            "sender": "CSCDC",
+            message,
+            "recipients": [phone]
+        }
+    });
+
+    return response.data;
+}
+
+function formatDate (timestamp){
+
+    date = new Date(timestamp * 1000);
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    const year = date.getFullYear();
+    const month = monthNames[date.getMonth()];
+    const day = date.getDate();
+    
+    let hours = date.getHours();
+    let minutes = date.getMinutes().toString();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    minutes = minutes.length == 1 ? `0${minutes}` : minutes;
+
+    return `${day} ${month}, ${year} - ${hours % 12}:${minutes} ${ampm}`;
 }
 
 function post(options) {
@@ -398,6 +435,8 @@ async function getLand (landId, user){
 module.exports = {
     ucwords,
     post,
+    sendSms,
+    formatDate,
     getName,
     mask,
     dynamicSort,

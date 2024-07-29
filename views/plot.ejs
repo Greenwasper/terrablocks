@@ -206,6 +206,7 @@
                                         <textarea name="notes" class="form-control" placeholder="Enter notes here..."></textarea>
                                     </div>
                                     <input type="hidden" name="landId" value="<%= feature.properties.id %>">
+                                    <input type="hidden" name="landName" value="<%= feature.properties.name %>">
                                 </main>
                                 <footer class="modal__footer text-right">
                                     <button class="btn-sm btn-outline-red mr-2" data-micromodal-close aria-label="Close this dialog window">Cancel</button>
@@ -241,6 +242,7 @@
                                         <textarea name="notes" class="form-control" placeholder="Enter notes here..."></textarea>
                                     </div>
                                     <input type="hidden" name="landId" value="<%= feature.properties.id %>">
+                                    <input type="hidden" name="landName" value="<%= feature.properties.name %>">
                                 </main>
                                 <footer class="modal__footer text-right">
                                     <button class="btn-sm btn-outline-red mr-2" data-micromodal-close aria-label="Close this dialog window">Cancel</button>
@@ -274,6 +276,8 @@
                                         <textarea name="notes" class="form-control" placeholder="Enter notes here..."></textarea>
                                     </div>
                                     <input type="hidden" name="landId" value="<%= feature.properties.id %>">
+                                    <input type="hidden" name="landName" value="<%= feature.properties.name %>">
+                                    <input type="hidden" name="ownerAddress" value="<%= owner.eth_address %>">
                                 </main>
                                 <footer class="modal__footer text-right">
                                     <button class="btn-sm btn-outline-red mr-2" data-micromodal-close aria-label="Close this dialog window">Cancel</button>
@@ -300,6 +304,9 @@
                                     <h1 class="">Are you sure you want to transfer ownership of this land?</h1>
                                     <p class="mt-2">This action is <b class="text-red-700">not reversible</b>. Please close this dialog box and confirm all the owner and buyer details before proceeding.</p>
                                     <input type="hidden" name="landId" value="<%= feature.properties.id %>">
+                                    <input type="hidden" name="landName" value="<%= feature.properties.name %>">
+                                    <input type="hidden" name="ownerAddress" value="<%= owner.eth_address %>">
+                                    <input type="hidden" name="buyerAddress" value="<%= buyer.eth_address %>">
                                     <div class="mt-6 floating-form">
                                         <input placeholder=" " class="form-control" type="password" name='passwordConfirm' id="passwordConfirm" required>
                                         <label for="passwordConfirm">Enter account password to confirm</label>

@@ -55,7 +55,16 @@
                 </div>
 
                 <h2 class="mt-3 text-secondary font-semibold">Bearings and Distances</h2>
-            
+                <div class="mt-2 flex gap-4 items-center">
+                    <h1 class="">Unit:</h1>
+                    <select id="unit-select" class="form-control !w-auto">
+                        <option value="metres">Metres</option>
+                        <option value="yards">Yards</option>
+                        <option value="feet">Feet</option>
+                    </select>
+                </div>
+                
+                
                 <div class="mt-3">
                     <table id="points-table" class="table-auto bg-white border-collapse w-full">
                         <thead>
@@ -311,10 +320,19 @@
                 const coordinates = [startingPoint];
 
                 points.forEach(([d, b]) => {
+
+                    let distance = 0;
+
+                    switch(document.querySelector('#unit-select').value){
+                        case 'metres': distance = metersToKilometers(d); break;
+                        case 'yards': distance = yardsToKilometers(d); break;
+                        case 'feet': distance = feetToKilometers(d); break;
+                    }
+
                     var point = turf.point(coordinates[coordinates.length - 1]);
-                    var distance = d/5280;
+                    // var distance = d/5280;
                     var bearing = b;
-                    var options = { units: "miles" };
+                    var options = { units: "kilometers" };
                     var newPoint = turf.destination(point, distance, bearing, options).geometry.coordinates;
                     coordinates.push(newPoint);
                 });

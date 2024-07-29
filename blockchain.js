@@ -128,7 +128,7 @@ async function sellerAck (valuesObject){
 
     const data = contract.methods.sellerAck(valuesObject.sellerAddress, valuesObject.buyerAddress, valuesObject.landId, valuesObject.notes).encodeABI();
 
-    const gasEstimate = await contract.methods.sellerAck(valuesObject.sellerAddress, valuesObject.buyerAddress, valuesObject.landId, valuesObject.notes).estimateGas({ from: walletAddress });
+    const gasEstimate = await contract.methods.sellerAck(valuesObject.sellerAddress, valuesObject.buyerAddress, valuesObject.landId, valuesObject.notes).estimateGas({ from: walletAddress }) + 100000;
     const gasPrice = await web3.eth.getGasPrice();
 
     const tx = {

@@ -20,7 +20,7 @@
                     </div>
                 </div>
 
-                <div class="dashboard-tile">
+                <div class="dashboard-tile relative" <% if(user.phone_verified != 'true' || user.email_verified != 'true'){ %> style="padding-bottom: 85px" <% } %>>
                     <h1 class="">Profile Status</h1>
                     <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <% Object.entries(verification).forEach(([key, value]) => { %>
@@ -35,6 +35,9 @@
                             </div>
                         <% }) %>
                     </div>
+                    <% if(user.phone_verified != 'true' || user.email_verified != 'true'){ %>
+                        <a href="/verification?eth=<%= user.eth_address %>" class="btn btn-green absolute bottom-4 left-4">Verify</a>
+                    <% } %>
                 </div>
 
                 <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-5">

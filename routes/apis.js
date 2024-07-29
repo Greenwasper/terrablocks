@@ -275,28 +275,31 @@ router.post('/send-code', async (req, res) => {
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         const ttd = Math.floor(Date.now() / 1000) + 3000;
+        const message = `Welcome to LandGuard: The future of land digitalization!\n\nYour OTP is ${otp}\n\n Do not share this code with anyone.`;
 
         try{
-            const response = await axios({
-                method: 'post',
-                url: 'https://sms.arkesel.com/api/v2/sms/send',     
-                headers: {
-                    'api-key': 'OjVaRldWbWlIa3dWMzEwVjY='
-                },
-                data:{
-                    "sender": "CSCDC",
-                    "message": `Your otp is ${otp}`,
-                    "recipients": [phone]
-                }
-            });
+            // const response = await axios({
+            //     method: 'post',
+            //     url: 'https://sms.arkesel.com/api/v2/sms/send',     
+            //     headers: {
+            //         'api-key': 'OjVaRldWbWlIa3dWMzEwVjY='
+            //     },
+            //     data:{
+            //         "sender": "CSCDC",
+            //         "message": `Your otp is ${otp}`,
+            //         "recipients": [phone]
+            //     }
+            // });
 
-            console.log(response.data);
+            const smsResponse = await customFunctions.sendSms(message, phone);
+
+            console.log(smsResponse);
 
             await query(`UPDATE users SET otp=${db.escape(otp)}, otp_ttd=${db.escape(ttd)} WHERE eth_address=${db.escape(eth_address)}`);
             return res.json("Phone OTP sent");
         } catch(e){
             console.log(e);
-            return res.status(500).json(`Database error: ${e}`);
+            return res.status(500).json(`An error has occurred: ${e}`);
         }
     }
 

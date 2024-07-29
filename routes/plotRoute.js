@@ -97,7 +97,17 @@ router.post('/claimLand', async (req, res) => {
 
             console.log(receipt);
 
-            await query(`DELETE FROM queue WHERE type='claimLand' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)}`);
+            await query(`DELETE FROM queue WHERE type='claimLand' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)} AND status='Pending'`);
+
+            const landBuyer = await query(`SELECT * FROM users WHERE eth_address=${db.escape(req.session.user.eth_address)}`);
+
+            landBuyer[0].name = customFunctions.getName(landBuyer[0]);
+
+            const message = `Block Added\n\nTxn Hash: ${receipt.logs[0].transactionHash}\nTime: ${customFunctions.formatDate(timestamp)}\n\nLand ${req.body.landName} (${landId}) has been claimed by you: ${landBuyer[0].name}`;
+
+            if(landBuyer.length != 0){
+                customFunctions.sendSms(message, landBuyer[0].phone);
+            }
 
         } catch(e){
             console.log(e);
@@ -147,7 +157,23 @@ router.post('/beginTransfer', async (req, res) => {
 
             console.log(receipt);
 
-            await query(`DELETE FROM queue WHERE type='sellerAck' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)}`);
+            await query(`DELETE FROM queue WHERE type='sellerAck' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)} AND status='Pending'`);
+
+            const landOwner = await query(`SELECT * FROM users WHERE eth_address=${db.escape(req.session.user.eth_address)}`);
+            const landBuyer = await query(`SELECT * FROM users WHERE eth_address=${db.escape(req.body.buyerAddress)}`);
+
+            landOwner[0].name = customFunctions.getName(landOwner[0]);
+            landBuyer[0].name = customFunctions.getName(landBuyer[0]);
+
+            const message = `Block Added\n\nTxn Hash: ${receipt.logs[0].transactionHash}\nTime: ${customFunctions.formatDate(timestamp)}\n\nLand ${req.body.landName} (${landId}) has been initiated for sale by owner ${landOwner[0].name}`;
+
+            if(landOwner.length != 0){
+                customFunctions.sendSms(message, landOwner[0].phone);
+            }
+
+            if(landBuyer.length != 0){
+                customFunctions.sendSms(message, landBuyer[0].phone);
+            }
 
         } catch(e){
             console.log(e);
@@ -189,8 +215,23 @@ router.post('/acknowledgeTransfer', async (req, res) => {
             });
 
             console.log(receipt);
+            await query(`DELETE FROM queue WHERE type='buyerAck' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)} AND status='Pending'`);
 
-            await query(`DELETE FROM queue WHERE type='buyerAck' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)}`);
+            const landOwner = await query(`SELECT * FROM users WHERE eth_address=${db.escape(req.body.ownerAddress)}`);
+            const landBuyer = await query(`SELECT * FROM users WHERE eth_address=${db.escape(req.session.user.eth_address)}`);
+
+            landOwner[0].name = customFunctions.getName(landOwner[0]);
+            landBuyer[0].name = customFunctions.getName(landBuyer[0]);
+
+            const message = `Block Added\n\nTxn Hash: ${receipt.logs[0].transactionHash}\nTime: ${customFunctions.formatDate(timestamp)}\n\nLand ${req.body.landName} (${landId}) has been acknowledged by buyer ${landBuyer[0].name}`;
+
+            if(landOwner.length != 0){
+                customFunctions.sendSms(message, landOwner[0].phone);
+            }
+
+            if(landBuyer.length != 0){
+                customFunctions.sendSms(message, landBuyer[0].phone);
+            }
 
         } catch(e){
             console.log(e);
@@ -232,7 +273,21 @@ router.post('/verifyTransfer', async (req, res) => {
             });
 
             console.log(receipt);
-            await query(`DELETE FROM queue WHERE type='layerAck' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)}`);
+            await query(`DELETE FROM queue WHERE type='layerAck' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)} AND status='Pending'`);
+
+            const landOwner = await query(`SELECT phone FROM users WHERE eth_address=${db.escape(req.body.ownerAddress)}`);
+            const landBuyer = await query(`SELECT phone FROM users WHERE eth_address=${db.escape(req.body.buyerAddress)}`);
+            const layerName = await query(`SELECT party FROM users WHERE eth_address=${db.escape(layerAddress)}`);
+
+            const message = `Block Added\n\nTxn Hash: ${receipt.logs[0].transactionHash}\nTime: ${customFunctions.formatDate(timestamp)}\n\nLand ${req.body.landName} (${landId}) has been validated by ${layerName[0].party.toUpperCase()}`;
+
+            if(landOwner.length != 0){
+                customFunctions.sendSms(message, landOwner[0].phone);
+            }
+
+            if(landBuyer.length != 0){
+                customFunctions.sendSms(message, landBuyer[0].phone);
+            }
 
         } catch(e){
             console.log(e);
