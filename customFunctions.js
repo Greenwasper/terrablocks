@@ -36,7 +36,7 @@ async function sendSms (message, phone) {
             'api-key': 'OjVaRldWbWlIa3dWMzEwVjY='
         },
         data:{
-            "sender": "CSCDC",
+            "sender": "LandGuard",
             message,
             "recipients": [phone]
         }

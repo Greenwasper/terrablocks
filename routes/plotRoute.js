@@ -275,18 +275,31 @@ router.post('/verifyTransfer', async (req, res) => {
             console.log(receipt);
             await query(`DELETE FROM queue WHERE type='layerAck' AND landId=${db.escape(landId)} AND eth_address=${db.escape(req.session.user.eth_address)} AND status='Pending'`);
 
-            const landOwner = await query(`SELECT phone FROM users WHERE eth_address=${db.escape(req.body.ownerAddress)}`);
-            const landBuyer = await query(`SELECT phone FROM users WHERE eth_address=${db.escape(req.body.buyerAddress)}`);
+            const landOwner = await query(`SELECT * FROM users WHERE eth_address=${db.escape(req.body.ownerAddress)}`);
+            const landBuyer = await query(`SELECT * FROM users WHERE eth_address=${db.escape(req.body.buyerAddress)}`);
             const layerName = await query(`SELECT party FROM users WHERE eth_address=${db.escape(layerAddress)}`);
+
+            landOwner[0].name = customFunctions.getName(landOwner[0]);
+            landBuyer[0].name = customFunctions.getName(landBuyer[0]);
 
             const message = `Block Added\n\nTxn Hash: ${receipt.logs[0].transactionHash}\nTime: ${customFunctions.formatDate(timestamp)}\n\nLand ${req.body.landName} (${landId}) has been validated by ${layerName[0].party.toUpperCase()}`;
 
             if(landOwner.length != 0){
                 customFunctions.sendSms(message, landOwner[0].phone);
+                console.log('sent owner sms');
             }
 
             if(landBuyer.length != 0){
                 customFunctions.sendSms(message, landBuyer[0].phone);
+                console.log('sent buyer sms');
+            }
+
+            if(layerName == 'commission'){
+                const message2 = `Block Added\n\nTime: ${customFunctions.formatDate(timestamp)}\n\nLand ${req.body.landName} (${landId}) has been transferred successfully from ${landOwner[0].name} to ${landBuyer[0].name}`;
+
+                customFunctions.sendSms(message2, landOwner[0].phone);
+                customFunctions.sendSms(message2, landBuyer[0].phone);
+                console.log('sent transfer sms');
             }
 
         } catch(e){

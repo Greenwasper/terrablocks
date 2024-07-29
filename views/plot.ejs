@@ -17,6 +17,13 @@
             <div id="invalidAddress" class="hidden"><%= invalidAddress %></div>
             <div id="landId" class="hidden"><%= feature.properties.id %></div>
 
+            <div class="mt-5 flex justify-center items-center text-xl flex-wrap gap-2">
+                <h1 class="">Land ID:</h1>
+                <span id="land-id" class="font-bold truncate"><%= feature.properties.id %></span>
+                <ion-icon id="copy-land-id" name="copy-outline" class="cursor-pointer"></ion-icon>
+                <ion-icon id="copy-land-id-check" name="checkmark-outline" class="hidden"></ion-icon>
+            </div>
+
             <% if(buttonEnablers.showValidationStatus){ %>
                 <div class="dashboard-tile">
                     <h1 class="">Validation Status</h1>
@@ -36,7 +43,7 @@
                 </div>
             <% } %>
 
-            <div class="grid grid-cols-20 gap-5 mt-8 p-3 xs:p-10 shadow-lg rounded-md bg-white">
+            <div class="grid grid-cols-20 gap-5 mt-5 p-3 xs:p-10 shadow-lg rounded-md bg-white">
                 <div class="land-details-container col-span-20 xl:col-span-20">
                     <h1 class="bold text-lg">Land Title Details</h1>
                     <hr class="my-3">
@@ -347,6 +354,17 @@
             disableFocus: true
         });
 
+        document.querySelector('#copy-land-id').addEventListener('click', e => {
+            navigator.clipboard.writeText(document.querySelector('#land-id').textContent);
+            document.querySelector('#copy-land-id-check').classList.toggle('hidden');
+            document.querySelector('#copy-land-id').classList.toggle('hidden');
+
+            setTimeout(() => {
+                document.querySelector('#copy-land-id-check').classList.toggle('hidden');
+                document.querySelector('#copy-land-id').classList.toggle('hidden');
+            }, 2000);
+        });
+
         if(document.querySelector('#incorrectPassword').textContent == "true"){
             toastRed("Incorrect Password");
             window.history.pushState('html', '', `/plot/${document.querySelector('#landId').textContent}`);
@@ -401,7 +419,7 @@
             map.panTo(new google.maps.LatLng(feature.properties.lat, feature.properties.lng));
 
             let zoom;
-            zoom = 19;
+            zoom = 18;
 
             map.setZoom(zoom);
 

@@ -20,6 +20,14 @@
                     </div>
                 </div>
 
+                <div class="mt-5">
+                    <div class="floating-form relatives">
+                        <input id="land-lookup" placeholder=" " class="form-control !bg-gray-100" type="text" value="">
+                        <label class="">Enter Land ID to view transactions</label>
+                        <button id="land-lookup-btn" class="bg-secondary text-white flex justify-center items-center absolute w-24 h-full top-0 right-0 rounded-r-md text-sm">Lookup</button>
+                    </div>
+                </div>
+
                 <div class="dashboard-tile relative" <% if(user.phone_verified != 'true' || user.email_verified != 'true'){ %> style="padding-bottom: 85px" <% } %>>
                     <h1 class="">Profile Status</h1>
                     <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -96,6 +104,12 @@
                 document.querySelector('#copy-eth-address-check').classList.toggle('hidden');
                 document.querySelector('#copy-eth-address').classList.toggle('hidden');
             }, 2000);
+        });
+
+        document.querySelector('#land-lookup-btn').addEventListener('click', e => {
+            if(document.querySelector('#land-lookup').value != ''){
+                window.location.href = `/land-history/${document.querySelector('#land-lookup').value}`;
+            }
         });
 
         const ctx = document.getElementById('myChart');
@@ -185,6 +199,11 @@
                         }]
                     },
                     options: {
+                        scale: {
+                            ticks: {
+                                precision: 0
+                            }
+                        },
                         indexAxis: 'y',
                         aspectRatio: 1,
                         scales: {

@@ -14,6 +14,14 @@
                     <h1 class="mt-10 text-2xl">Welcome, <%= user.name %></h1>
                 </div>
 
+                <div class="mt-5">
+                    <div class="floating-form relatives">
+                        <input id="land-lookup" placeholder=" " class="form-control !bg-gray-100" type="text" value="">
+                        <label class="">Enter Land ID to view transactions</label>
+                        <button id="land-lookup-btn" class="bg-secondary text-white flex justify-center items-center absolute w-24 h-full top-0 right-0 rounded-r-md text-sm">Lookup</button>
+                    </div>
+                </div>
+
                 <div id="actions-container" class="py-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                     <a href="/land-map" class="border-blue-500">
                         <div class="h-12 w-12 rounded-full bg-blue-400 flex justify-center items-center">
@@ -69,7 +77,13 @@
 
     <script>
         const ctx = document.getElementById('myChart');
-        const ctx2 = document.getElementById('myChart2');   
+        const ctx2 = document.getElementById('myChart2');
+        
+        document.querySelector('#land-lookup-btn').addEventListener('click', e => {
+            if(document.querySelector('#land-lookup').value != ''){
+                window.location.href = `/land-history/${document.querySelector('#land-lookup').value}`;
+            }
+        });
 
         $.ajax({
             type: 'get',
@@ -149,6 +163,11 @@
                         }]
                     },
                     options: {
+                        scale: {
+                            ticks: {
+                                precision: 0
+                            }
+                        },
                         indexAxis: 'y',
                         aspectRatio: 1,
                         scales: {
